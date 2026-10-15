@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JH ESP32 BLE HMI</title>
 </head>
 
@@ -41,80 +42,202 @@ const SERVICE_UUID =
 const CHARACTERISTIC_UUID =
   "abcd1234-5678-1234-5678-abcdef123456";
 
-let characteristic;
+let bluetoothDevice = null;
+let characteristic = null;
 
-document.getElementById("connectButton").addEventListener("click", async () => {
 
-  try {
+// ----------------------------
+// Control enable / disable
+// ----------------------------
 
-    const device = await navigator.bluetooth.requestDevice({
-      filters: [{ name: "JH_ESP32_BLE" }],
-      optionalServices: [SERVICE_UUID]
-    });
+function setControls(enabled) {
 
-    const server = await device.gatt.connect();
+  document.getElementById("onButton").disabled = !enabled;
+  document.getElementById("offButton").disabled = !enabled;
+  document.getElementById("brightness").disabled = !enabled;
 
-    const service =
-      await server.getPrimaryService(SERVICE_UUID);
+}
 
-    characteristic =
-      await service.getCharacteristic(CHARACTERISTIC_UUID);
 
-    document.getElementById("status").innerText =
-      "Status: CONNECTED";
+// ----------------------------
+// CONNECT / DISCONNECT button
+// ----------------------------
 
-    document.getElementById("onButton").disabled = false;
-    document.getElementById("offButton").disabled = false;
-    document.getElementById("brightness").disabled = false;
+document.getElementById("connectButton").addEventListener(
+  "click",
+  async () => {
+
+    // Already connected -> DISCONNECT
+    if (
+      bluetoothDevice &&
+      bluetoothDevice.gatt.connected
+    ) {
+
+      bluetoothDevice.gatt.disconnect();
+
+      return;
+    }
+
+
+    // Not connected -> CONNECT
+    try {
+
+      bluetoothDevice =
+        await navigator.bluetooth.requestDevice({
+          filters: [
+            { name: "JH_ESP32_BLE" }
+          ],
+          optionalServices: [
+            SERVICE_UUID
+          ]
+        });
+
+
+      bluetoothDevice.addEventListener(
+        "gattserverdisconnected",
+        onDisconnected
+      );
+
+
+      const server =
+        await bluetoothDevice.gatt.connect();
+
+
+      const service =
+        await server.getPrimaryService(
+          SERVICE_UUID
+        );
+
+
+      characteristic =
+        await service.getCharacteristic(
+          CHARACTERISTIC_UUID
+        );
+
+
+      document.getElementById("status").innerText =
+        "Status: CONNECTED";
+
+
+      document.getElementById("connectButton").innerText =
+        "DISCONNECT";
+
+
+      setControls(true);
+
+    }
+
+    catch (error) {
+
+      document.getElementById("status").innerText =
+        "Status: ERROR";
+
+      document.getElementById("connectButton").innerText =
+        "CONNECT BLE";
+
+      setControls(false);
+
+      console.log(error);
+
+    }
 
   }
+);
 
-  catch (error) {
 
-    document.getElementById("status").innerText =
-      "Status: ERROR";
+// ----------------------------
+// BLE disconnected
+// ----------------------------
 
-    console.log(error);
+function onDisconnected() {
 
-  }
+  characteristic = null;
 
-});
+  document.getElementById("status").innerText =
+    "Status: DISCONNECTED";
 
+
+  document.getElementById("connectButton").innerText =
+    "CONNECT BLE";
+
+
+  setControls(false);
+
+}
+
+
+// ----------------------------
+// Send command to ESP32
+// ----------------------------
 
 async function sendCommand(command) {
 
-  if (!characteristic) return;
+  if (
+    !characteristic ||
+    !bluetoothDevice ||
+    !bluetoothDevice.gatt.connected
+  ) {
 
-  const data = new TextEncoder().encode(command);
+    return;
+
+  }
+
+  const data =
+    new TextEncoder().encode(command);
 
   await characteristic.writeValue(data);
 
 }
 
 
-document.getElementById("onButton").addEventListener("click", async () => {
+// ----------------------------
+// LED ON
+// ----------------------------
 
-  await sendCommand("ON");
+document.getElementById("onButton").addEventListener(
+  "click",
+  async () => {
 
-});
+    await sendCommand("ON");
 
-
-document.getElementById("offButton").addEventListener("click", async () => {
-
-  await sendCommand("OFF");
-
-});
+  }
+);
 
 
-document.getElementById("brightness").addEventListener("input", async (event) => {
+// ----------------------------
+// LED OFF
+// ----------------------------
 
-  const value = event.target.value;
+document.getElementById("offButton").addEventListener(
+  "click",
+  async () => {
 
-  document.getElementById("brightnessValue").innerText = value;
+    await sendCommand("OFF");
 
-  await sendCommand(value);
+  }
+);
 
-});
+
+// ----------------------------
+// PWM
+// ----------------------------
+
+document.getElementById("brightness").addEventListener(
+  "input",
+  async (event) => {
+
+    const value = event.target.value;
+
+
+    document.getElementById(
+      "brightnessValue"
+    ).innerText = value;
+
+
+    await sendCommand(value);
+
+  }
+);
 
 </script>
 
