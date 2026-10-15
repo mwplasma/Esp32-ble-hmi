@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>JH ESP32 BLE HMI</title>
+</head>
+
+<body>
+
+  <h1>JH ESP32 BLE HMI</h1>
+
+  <button id="connectButton">CONNECT BLE</button>
+
+  <p id="status">Status: DISCONNECTED</p>
+
+<script>
+
+const SERVICE_UUID =
+  "12345678-1234-1234-1234-1234567890ab";
+
+const CHARACTERISTIC_UUID =
+  "abcd1234-5678-1234-5678-abcdef123456";
+
+let characteristic;
+
+document.getElementById("connectButton").addEventListener("click", async () => {
+
+  try {
+
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{ name: "JH_ESP32_BLE" }],
+      optionalServices: [SERVICE_UUID]
+    });
+
+    const server = await device.gatt.connect();
+
+    const service =
+      await server.getPrimaryService(SERVICE_UUID);
+
+    characteristic =
+      await service.getCharacteristic(CHARACTERISTIC_UUID);
+
+    document.getElementById("status").innerText =
+      "Status: CONNECTED";
+
+  }
+
+  catch (error) {
+
+    document.getElementById("status").innerText =
+      "Status: ERROR";
+
+    console.log(error);
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
