@@ -13,6 +13,9 @@
 
   <p id="status">Status: DISCONNECTED</p>
 
+  <button id="onButton" disabled>LED ON</button>
+  <button id="offButton" disabled>LED OFF</button>
+
 <script>
 
 const SERVICE_UUID =
@@ -43,6 +46,9 @@ document.getElementById("connectButton").addEventListener("click", async () => {
     document.getElementById("status").innerText =
       "Status: CONNECTED";
 
+    document.getElementById("onButton").disabled = false;
+    document.getElementById("offButton").disabled = false;
+
   }
 
   catch (error) {
@@ -53,6 +59,31 @@ document.getElementById("connectButton").addEventListener("click", async () => {
     console.log(error);
 
   }
+
+});
+
+
+async function sendCommand(command) {
+
+  if (!characteristic) return;
+
+  const data = new TextEncoder().encode(command);
+
+  await characteristic.writeValue(data);
+
+}
+
+
+document.getElementById("onButton").addEventListener("click", async () => {
+
+  await sendCommand("ON");
+
+});
+
+
+document.getElementById("offButton").addEventListener("click", async () => {
+
+  await sendCommand("OFF");
 
 });
 
