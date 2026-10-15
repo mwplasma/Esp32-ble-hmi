@@ -1,38 +1,240 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JH ESP32 BLE HMI</title>
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Project Rebirth - ESP32 BLE HMI</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 25px;
+      background: #111827;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: auto;
+      background: #1f2937;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      font-size: 28px;
+      color: #38bdf8;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 18px;
+      font-weight: normal;
+      color: #cbd5e1;
+    }
+
+    .statusPanel {
+      background: #0f172a;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      text-align: left;
+    }
+
+    .statusLine {
+      margin: 8px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    #ledDot {
+      background: #ef4444;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 15px 22px;
+      margin: 7px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    #connectButton {
+      width: 90%;
+      background: #2563eb;
+      margin-bottom: 20px;
+    }
+
+    #onButton {
+      background: #16a34a;
+      width: 42%;
+    }
+
+    #offButton {
+      background: #dc2626;
+      width: 42%;
+    }
+
+    .brightnessPanel {
+      margin-top: 25px;
+      padding: 20px;
+      background: #0f172a;
+      border-radius: 12px;
+    }
+
+    .brightnessTitle {
+      font-size: 16px;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    #brightnessValue {
+      font-size: 32px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    #brightness {
+      width: 90%;
+      margin-top: 18px;
+      accent-color: #38bdf8;
+    }
+
+    #resetButton {
+      margin-top: 25px;
+      width: 55%;
+      background: #64748b;
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+  </style>
 </head>
+
 
 <body>
 
-  <h1>JH ESP32 BLE HMI</h1>
+<div class="container">
 
-  <button id="connectButton">CONNECT BLE</button>
+  <h1>PROJECT REBIRTH</h1>
 
-  <p id="status">Status: DISCONNECTED</p>
+  <h2>ESP32 BLE HMI</h2>
 
-  <button id="onButton" disabled>LED ON</button>
-  <button id="offButton" disabled>LED OFF</button>
 
-  <br><br>
+  <button id="connectButton">
+    CONNECT BLE
+  </button>
 
-  <label for="brightness">
-    Brightness: <span id="brightnessValue">0</span>%
-  </label>
 
-  <br>
+  <div class="statusPanel">
 
-  <input
-    type="range"
-    id="brightness"
-    min="0"
-    max="100"
-    value="0"
-    disabled
-  >
+    <div class="statusLine">
+
+      <span id="systemDot"
+            class="dot"></span>
+
+      SYSTEM:
+      <span id="systemStatus">
+        DISCONNECTED
+      </span>
+
+    </div>
+
+
+    <div class="statusLine">
+
+      <span id="ledDot"
+            class="dot"></span>
+
+      LED STATUS:
+      <span id="ledStatus">
+        OFF
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <button id="onButton" disabled>
+    LED ON
+  </button>
+
+  <button id="offButton" disabled>
+    LED OFF
+  </button>
+
+
+  <div class="brightnessPanel">
+
+    <div class="brightnessTitle">
+      BRIGHTNESS
+    </div>
+
+    <div>
+      <span id="brightnessValue">0</span>%
+    </div>
+
+    <input
+      type="range"
+      id="brightness"
+      min="0"
+      max="100"
+      value="0"
+      disabled
+    >
+
+  </div>
+
+
+  <button id="resetButton" disabled>
+    RESET
+  </button>
+
+
+  <footer>
+    PROJECT REBIRTH | ESP32 BLE HMI v1.0
+  </footer>
+
+</div>
+
 
 <script>
 
@@ -42,204 +244,111 @@ const SERVICE_UUID =
 const CHARACTERISTIC_UUID =
   "abcd1234-5678-1234-5678-abcdef123456";
 
+
 let bluetoothDevice = null;
 let characteristic = null;
 
 
-// ----------------------------
-// Control enable / disable
-// ----------------------------
+// =============================================
+// Enable / Disable controls
+// =============================================
 
 function setControls(enabled) {
 
-  document.getElementById("onButton").disabled = !enabled;
-  document.getElementById("offButton").disabled = !enabled;
-  document.getElementById("brightness").disabled = !enabled;
+  document.getElementById("onButton").disabled =
+    !enabled;
 
+  document.getElementById("offButton").disabled =
+    !enabled;
+
+  document.getElementById("brightness").disabled =
+    !enabled;
+
+  document.getElementById("resetButton").disabled =
+    !enabled;
 }
 
 
-// ----------------------------
-// CONNECT / DISCONNECT button
-// ----------------------------
+// =============================================
+// System Status
+// =============================================
 
-document.getElementById("connectButton").addEventListener(
-  "click",
-  async () => {
+function setSystemStatus(connected) {
 
-    // Already connected -> DISCONNECT
-    if (
-      bluetoothDevice &&
-      bluetoothDevice.gatt.connected
-    ) {
+  const status =
+    document.getElementById("systemStatus");
 
-      bluetoothDevice.gatt.disconnect();
-
-      return;
-    }
+  const dot =
+    document.getElementById("systemDot");
 
 
-    // Not connected -> CONNECT
-    try {
+  if (connected) {
 
-      bluetoothDevice =
-        await navigator.bluetooth.requestDevice({
-          filters: [
-            { name: "JH_ESP32_BLE" }
-          ],
-          optionalServices: [
-            SERVICE_UUID
-          ]
-        });
+    status.innerText = "CONNECTED";
+    status.style.color = "#22c55e";
 
-
-      bluetoothDevice.addEventListener(
-        "gattserverdisconnected",
-        onDisconnected
-      );
-
-
-      const server =
-        await bluetoothDevice.gatt.connect();
-
-
-      const service =
-        await server.getPrimaryService(
-          SERVICE_UUID
-        );
-
-
-      characteristic =
-        await service.getCharacteristic(
-          CHARACTERISTIC_UUID
-        );
-
-
-      document.getElementById("status").innerText =
-        "Status: CONNECTED";
-
-
-      document.getElementById("connectButton").innerText =
-        "DISCONNECT";
-
-
-      setControls(true);
-
-    }
-
-    catch (error) {
-
-      document.getElementById("status").innerText =
-        "Status: ERROR";
-
-      document.getElementById("connectButton").innerText =
-        "CONNECT BLE";
-
-      setControls(false);
-
-      console.log(error);
-
-    }
+    dot.style.background = "#22c55e";
 
   }
-);
 
+  else {
 
-// ----------------------------
-// BLE disconnected
-// ----------------------------
+    status.innerText = "DISCONNECTED";
+    status.style.color = "#ef4444";
 
-function onDisconnected() {
+    dot.style.background = "#ef4444";
 
-  characteristic = null;
-
-  document.getElementById("status").innerText =
-    "Status: DISCONNECTED";
-
-
-  document.getElementById("connectButton").innerText =
-    "CONNECT BLE";
-
-
-  setControls(false);
-
+  }
 }
 
 
-// ----------------------------
-// Send command to ESP32
-// ----------------------------
+// =============================================
+// LED Status
+// =============================================
 
-async function sendCommand(command) {
+function updateLedStatus(value) {
 
-  if (
-    !characteristic ||
-    !bluetoothDevice ||
-    !bluetoothDevice.gatt.connected
-  ) {
+  const status =
+    document.getElementById("ledStatus");
 
-    return;
+  const dot =
+    document.getElementById("ledDot");
+
+  const brightnessValue =
+    document.getElementById("brightnessValue");
+
+
+  brightnessValue.innerText = value;
+
+
+  if (value == 0) {
+
+    status.innerText = "OFF";
+    status.style.color = "#ef4444";
+
+    dot.style.background = "#ef4444";
 
   }
 
-  const data =
-    new TextEncoder().encode(command);
+  else if (value == 100) {
 
-  await characteristic.writeValue(data);
+    status.innerText = "ON";
+    status.style.color = "#22c55e";
 
+    dot.style.background = "#22c55e";
+
+  }
+
+  else {
+
+    status.innerText = "DIMMING";
+    status.style.color = "#facc15";
+
+    dot.style.background = "#facc15";
+
+  }
 }
 
 
-// ----------------------------
-// LED ON
-// ----------------------------
-
-document.getElementById("onButton").addEventListener(
-  "click",
-  async () => {
-
-    await sendCommand("ON");
-
-  }
-);
-
-
-// ----------------------------
-// LED OFF
-// ----------------------------
-
-document.getElementById("offButton").addEventListener(
-  "click",
-  async () => {
-
-    await sendCommand("OFF");
-
-  }
-);
-
-
-// ----------------------------
-// PWM
-// ----------------------------
-
-document.getElementById("brightness").addEventListener(
-  "input",
-  async (event) => {
-
-    const value = event.target.value;
-
-
-    document.getElementById(
-      "brightnessValue"
-    ).innerText = value;
-
-
-    await sendCommand(value);
-
-  }
-);
-
-</script>
-
-</body>
-</html>
+// =============================================
+// 
