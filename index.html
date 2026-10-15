@@ -16,6 +16,23 @@
   <button id="onButton" disabled>LED ON</button>
   <button id="offButton" disabled>LED OFF</button>
 
+  <br><br>
+
+  <label for="brightness">
+    Brightness: <span id="brightnessValue">0</span>%
+  </label>
+
+  <br>
+
+  <input
+    type="range"
+    id="brightness"
+    min="0"
+    max="100"
+    value="0"
+    disabled
+  >
+
 <script>
 
 const SERVICE_UUID =
@@ -48,6 +65,7 @@ document.getElementById("connectButton").addEventListener("click", async () => {
 
     document.getElementById("onButton").disabled = false;
     document.getElementById("offButton").disabled = false;
+    document.getElementById("brightness").disabled = false;
 
   }
 
@@ -84,6 +102,17 @@ document.getElementById("onButton").addEventListener("click", async () => {
 document.getElementById("offButton").addEventListener("click", async () => {
 
   await sendCommand("OFF");
+
+});
+
+
+document.getElementById("brightness").addEventListener("input", async (event) => {
+
+  const value = event.target.value;
+
+  document.getElementById("brightnessValue").innerText = value;
+
+  await sendCommand(value);
 
 });
 
