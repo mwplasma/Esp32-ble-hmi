@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
@@ -68,10 +67,6 @@
       height: 13px;
       margin-right: 8px;
       border-radius: 50%;
-      background: #ef4444;
-    }
-
-    #ledDot {
       background: #ef4444;
     }
 
@@ -141,7 +136,7 @@
 
     footer {
       margin-top: 30px;
-      color: #64748b;
+      color: #94a3b8;
       font-size: 13px;
     }
 
@@ -154,7 +149,6 @@
 <div class="container">
 
   <h1>PROJECT REBIRTH</h1>
-
   <h2>ESP32 BLE HMI</h2>
 
 
@@ -166,28 +160,22 @@
   <div class="statusPanel">
 
     <div class="statusLine">
-
-      <span id="systemDot"
-            class="dot"></span>
+      <span id="systemDot" class="dot"></span>
 
       SYSTEM:
       <span id="systemStatus">
         DISCONNECTED
       </span>
-
     </div>
 
 
     <div class="statusLine">
-
-      <span id="ledDot"
-            class="dot"></span>
+      <span id="ledDot" class="dot"></span>
 
       LED STATUS:
       <span id="ledStatus">
         OFF
       </span>
-
     </div>
 
   </div>
@@ -244,14 +232,13 @@ const SERVICE_UUID =
 const CHARACTERISTIC_UUID =
   "abcd1234-5678-1234-5678-abcdef123456";
 
-
 let bluetoothDevice = null;
 let characteristic = null;
 
 
-// =============================================
-// Enable / Disable controls
-// =============================================
+// ======================================
+// Enable / Disable Controls
+// ======================================
 
 function setControls(enabled) {
 
@@ -269,9 +256,9 @@ function setControls(enabled) {
 }
 
 
-// =============================================
-// System Status
-// =============================================
+// ======================================
+// SYSTEM STATUS
+// ======================================
 
 function setSystemStatus(connected) {
 
@@ -284,27 +271,24 @@ function setSystemStatus(connected) {
 
   if (connected) {
 
-    status.innerText = "CONNECTED";
+    status.textContent = "CONNECTED";
     status.style.color = "#22c55e";
 
     dot.style.background = "#22c55e";
 
-  }
+  } else {
 
-  else {
-
-    status.innerText = "DISCONNECTED";
+    status.textContent = "DISCONNECTED";
     status.style.color = "#ef4444";
 
     dot.style.background = "#ef4444";
-
   }
 }
 
 
-// =============================================
-// LED Status
-// =============================================
+// ======================================
+// LED STATUS
+// ======================================
 
 function updateLedStatus(value) {
 
@@ -314,41 +298,287 @@ function updateLedStatus(value) {
   const dot =
     document.getElementById("ledDot");
 
-  const brightnessValue =
-    document.getElementById("brightnessValue");
+
+  document.getElementById(
+    "brightnessValue"
+  ).textContent = value;
 
 
-  brightnessValue.innerText = value;
+  if (value === 0) {
 
-
-  if (value == 0) {
-
-    status.innerText = "OFF";
+    status.textContent = "OFF";
     status.style.color = "#ef4444";
-
     dot.style.background = "#ef4444";
 
   }
 
-  else if (value == 100) {
+  else if (value === 100) {
 
-    status.innerText = "ON";
+    status.textContent = "ON";
     status.style.color = "#22c55e";
-
     dot.style.background = "#22c55e";
 
   }
 
   else {
 
-    status.innerText = "DIMMING";
+    status.textContent = "DIMMING";
     status.style.color = "#facc15";
-
     dot.style.background = "#facc15";
-
   }
 }
 
 
-// =============================================
-// 
+// ======================================
+// CONNECT / DISCONNECT
+// ======================================
+
+async function connectBLE() {
+
+  // Already connected -> Disconnect
+
+  if (
+    bluetoothDevice &&
+    bluetoothDevice.gatt &&
+    bluetoothDevice.gatt.connected
+  ) {
+
+    bluetoothDevice.gatt.disconnect();
+    return;
+  }
+
+
+  // Connect
+
+  try {
+
+    bluetoothDevice =
+      await navigator.bluetooth.requestDevice({
+
+        filters: [
+          {
+            name: "JH_ESP32_BLE"
+          }
+        ],
+
+        optionalServices: [
+          SERVICE_UUID
+        ]
+
+      });
+
+
+    bluetoothDevice.addEventListener(
+      "gattserverdisconnected",
+      onDisconnected
+    );
+
+
+    const server =
+      await bluetoothDevice.gatt.connect();
+
+
+    const service =
+      await server.getPrimaryService(
+        SERVICE_UUID
+      );
+
+
+    characteristic =
+      await service.getCharacteristic(
+        CHARACTERISTIC_UUID
+      );
+
+
+    setSystemStatus(true);
+    setControls(true);
+
+
+    document.getElementById(
+      "connectButton"
+    ).textContent =
+      "DISCONNECT";
+
+  }
+
+  catch (error) {
+
+    console.log("BLE ERROR:", error);
+
+    characteristic = null;
+
+    setSystemStatus(false);
+    setControls(false);
+
+
+    document.getElementById(
+      "connectButton"
+    ).textContent =
+      "CONNECT BLE";
+  }
+}
+
+
+// ======================================
+// DISCONNECTED
+// ======================================
+
+function onDisconnected() {
+
+  characteristic = null;
+
+  setSystemStatus(false);
+  setControls(false);
+
+
+  document.getElementById(
+    "connectButton"
+  ).textContent =
+    "CONNECT BLE";
+}
+
+
+// ======================================
+// SEND COMMAND
+// ======================================
+
+async function sendCommand(command) {
+
+  if (!characteristic) {
+    return;
+  }
+
+  if (!bluetoothDevice) {
+    return;
+  }
+
+  if (!bluetoothDevice.gatt.connected) {
+    return;
+  }
+
+
+  try {
+
+    const data =
+      new TextEncoder().encode(command);
+
+    await characteristic.writeValue(data);
+
+  }
+
+  catch (error) {
+
+    console.log(
+      "WRITE ERROR:",
+      error
+    );
+  }
+}
+
+
+// ======================================
+// CONNECT BUTTON
+// ======================================
+
+document.getElementById(
+  "connectButton"
+).onclick = connectBLE;
+
+
+// ======================================
+// LED ON
+// ======================================
+
+document.getElementById(
+  "onButton"
+).onclick = async function() {
+
+  await sendCommand("ON");
+
+
+  document.getElementById(
+    "brightness"
+  ).value = 100;
+
+
+  updateLedStatus(100);
+};
+
+
+// ======================================
+// LED OFF
+// ======================================
+
+document.getElementById(
+  "offButton"
+).onclick = async function() {
+
+  await sendCommand("OFF");
+
+
+  document.getElementById(
+    "brightness"
+  ).value = 0;
+
+
+  updateLedStatus(0);
+};
+
+
+// ======================================
+// PWM
+// ======================================
+
+document.getElementById(
+  "brightness"
+).oninput = async function() {
+
+  const value =
+    Number(this.value);
+
+
+  updateLedStatus(value);
+
+
+  await sendCommand(
+    value.toString()
+  );
+};
+
+
+// ======================================
+// RESET -> 50%
+// ======================================
+
+document.getElementById(
+  "resetButton"
+).onclick = async function() {
+
+  const value = 50;
+
+
+  document.getElementById(
+    "brightness"
+  ).value = value;
+
+
+  updateLedStatus(value);
+
+
+  await sendCommand("50");
+};
+
+
+// ======================================
+// INITIAL STATE
+// ======================================
+
+setSystemStatus(false);
+updateLedStatus(0);
+setControls(false);
+
+</script>
+
+</body>
+
+</html>
