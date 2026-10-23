@@ -2,145 +2,99 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-  <title>Project Rebirth - ESP32 BLE HMI</title>
+<title>Project Rebirth</title>
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
-    }
+body {
+    margin: 0;
+    background: #10151c;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
 
-    body {
-      margin: 0;
-      padding: 25px;
-      background: #111827;
-      color: white;
-      font-family: Arial, Helvetica, sans-serif;
-      text-align: center;
-    }
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 25px;
+}
 
-    .container {
-      max-width: 520px;
-      margin: auto;
-      background: #1f2937;
-      padding: 25px;
-      border-radius: 18px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
-    }
+h1 {
+    margin-bottom: 5px;
+    color: #5fc9ff;
+}
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 4px;
-      font-size: 28px;
-      color: #38bdf8;
-    }
+.owner {
+    color: #aaaaaa;
+    margin-bottom: 25px;
+}
 
-    h2 {
-      margin-top: 0;
-      margin-bottom: 25px;
-      font-size: 18px;
-      font-weight: normal;
-      color: #cbd5e1;
-    }
+button {
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 20px;
+    margin: 8px;
+    cursor: pointer;
+}
 
-    .statusPanel {
-      background: #0f172a;
-      padding: 18px;
-      border-radius: 12px;
-      margin-bottom: 22px;
-      text-align: left;
-    }
+.connect {
+    width: 260px;
+    background: #1976d2;
+}
 
-    .statusLine {
-      margin: 8px 0;
-      font-size: 18px;
-      font-weight: bold;
-    }
+.jog {
+    width: 220px;
+    height: 90px;
+    background: #167c45;
+}
 
-    .dot {
-      display: inline-block;
-      width: 13px;
-      height: 13px;
-      margin-right: 8px;
-      border-radius: 50%;
-      background: #ef4444;
-    }
+.stop {
+    width: 220px;
+    height: 80px;
+    background: #c62828;
+}
 
-    button {
-      border: none;
-      border-radius: 10px;
-      padding: 15px 22px;
-      margin: 7px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-    }
+.speedButton {
+    width: 100px;
+    height: 80px;
+    background: #455a64;
+    font-size: 36px;
+}
 
-    button:disabled {
-      opacity: 0.35;
-      cursor: default;
-    }
+.speedDisplay {
+    display: inline-block;
+    width: 140px;
+    font-size: 32px;
+    font-weight: bold;
+}
 
-    #connectButton {
-      width: 90%;
-      background: #2563eb;
-      margin-bottom: 20px;
-    }
+.speedTitle {
+    margin-top: 30px;
+    font-size: 20px;
+    color: #aaaaaa;
+}
 
-    #onButton {
-      background: #16a34a;
-      width: 42%;
-    }
+.status {
+    margin-top: 30px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #ff5252;
+}
 
-    #offButton {
-      background: #dc2626;
-      width: 42%;
-    }
+.connected {
+    color: #5cff8d;
+}
 
-    .brightnessPanel {
-      margin-top: 25px;
-      padding: 20px;
-      background: #0f172a;
-      border-radius: 12px;
-    }
-
-    .brightnessTitle {
-      font-size: 16px;
-      color: #94a3b8;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-
-    #brightnessValue {
-      font-size: 32px;
-      font-weight: bold;
-      color: #38bdf8;
-    }
-
-    #brightness {
-      width: 90%;
-      margin-top: 18px;
-      accent-color: #38bdf8;
-    }
-
-    #resetButton {
-      margin-top: 25px;
-      width: 55%;
-      background: #64748b;
-    }
-
-    footer {
-      margin-top: 30px;
-      color: #94a3b8;
-      font-size: 13px;
-    }
-
-  </style>
+</style>
 </head>
 
 
@@ -148,437 +102,207 @@
 
 <div class="container">
 
-  <h1>PROJECT REBIRTH</h1>
-  <h2>ESP32 BLE HMI</h2>
+<h1>PROJECT REBIRTH</h1>
+
+<div class="owner">
+Jeong Hoon Kim (김정훈)
+</div>
+
+<button class="connect"
+        onclick="connectBLE()">
+CONNECT
+</button>
 
 
-  <button id="connectButton">
-    CONNECT BLE
-  </button>
+<br><br>
 
 
-  <div class="statusPanel">
+<button class="jog"
+        onclick="sendCommand('R')">
+JOG REV
+</button>
 
-    <div class="statusLine">
-      <span id="systemDot" class="dot"></span>
-
-      SYSTEM:
-      <span id="systemStatus">
-        DISCONNECTED
-      </span>
-    </div>
-
-
-    <div class="statusLine">
-      <span id="ledDot" class="dot"></span>
-
-      LED STATUS:
-      <span id="ledStatus">
-        OFF
-      </span>
-    </div>
-
-  </div>
+<button class="jog"
+        onclick="sendCommand('F')">
+JOG FWD
+</button>
 
 
-  <button id="onButton" disabled>
-    LED ON
-  </button>
-
-  <button id="offButton" disabled>
-    LED OFF
-  </button>
+<br>
 
 
-  <div class="brightnessPanel">
-
-    <div class="brightnessTitle">
-      BRIGHTNESS
-    </div>
-
-    <div>
-      <span id="brightnessValue">0</span>%
-    </div>
-
-    <input
-      type="range"
-      id="brightness"
-      min="0"
-      max="100"
-      value="0"
-      disabled
-    >
-
-  </div>
+<button class="stop"
+        onclick="sendCommand('S')">
+STOP
+</button>
 
 
-  <button id="resetButton" disabled>
-    RESET
-  </button>
+<div class="speedTitle">
+JOG SPEED
+</div>
 
 
-  <footer>
-    PROJECT REBIRTH | ESP32 BLE HMI v1.0
-  </footer>
+<div>
+
+<button class="speedButton"
+        onclick="decreaseSpeed()">
+−
+</button>
+
+<span id="speed"
+      class="speedDisplay">
+50%
+</span>
+
+<button class="speedButton"
+        onclick="increaseSpeed()">
++
+</button>
+
+</div>
+
+
+<div id="status"
+     class="status">
+
+BLE: DISCONNECTED
+
+</div>
 
 </div>
 
 
 <script>
 
+let bluetoothDevice;
+let characteristic;
+
+let speed = 50;
+
 const SERVICE_UUID =
-  "12345678-1234-1234-1234-1234567890ab";
+"12345678-1234-1234-1234-123456789abc";
 
 const CHARACTERISTIC_UUID =
-  "abcd1234-5678-1234-5678-abcdef123456";
-
-let bluetoothDevice = null;
-let characteristic = null;
+"abcd1234-1234-1234-1234-abcdef123456";
 
 
-// ======================================
-// Enable / Disable Controls
-// ======================================
+async function connectBLE()
+{
+    try
+    {
+        bluetoothDevice =
+            await navigator.bluetooth.requestDevice(
+            {
+                filters:
+                [
+                    {
+                        name: "Project_Rebirth"
+                    }
+                ],
 
-function setControls(enabled) {
+                optionalServices:
+                [
+                    SERVICE_UUID
+                ]
+            });
 
-  document.getElementById("onButton").disabled =
-    !enabled;
+        const server =
+            await bluetoothDevice.gatt.connect();
 
-  document.getElementById("offButton").disabled =
-    !enabled;
+        const service =
+            await server.getPrimaryService(
+                SERVICE_UUID
+            );
 
-  document.getElementById("brightness").disabled =
-    !enabled;
+        characteristic =
+            await service.getCharacteristic(
+                CHARACTERISTIC_UUID
+            );
 
-  document.getElementById("resetButton").disabled =
-    !enabled;
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTED";
+
+        document.getElementById("status")
+                .classList.add("connected");
+
+        // Send initial speed
+        await sendCommand("V" + speed);
+    }
+
+    catch(error)
+    {
+        console.log(error);
+
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTION FAILED";
+    }
 }
 
 
-// ======================================
-// SYSTEM STATUS
-// ======================================
+async function sendCommand(command)
+{
+    if (!characteristic)
+    {
+        alert("BLE is not connected.");
+        return;
+    }
 
-function setSystemStatus(connected) {
+    const encoder = new TextEncoder();
 
-  const status =
-    document.getElementById("systemStatus");
-
-  const dot =
-    document.getElementById("systemDot");
-
-
-  if (connected) {
-
-    status.textContent = "CONNECTED";
-    status.style.color = "#22c55e";
-
-    dot.style.background = "#22c55e";
-
-  } else {
-
-    status.textContent = "DISCONNECTED";
-    status.style.color = "#ef4444";
-
-    dot.style.background = "#ef4444";
-  }
-}
-
-
-// ======================================
-// LED STATUS
-// ======================================
-
-function updateLedStatus(value) {
-
-  const status =
-    document.getElementById("ledStatus");
-
-  const dot =
-    document.getElementById("ledDot");
-
-
-  document.getElementById(
-    "brightnessValue"
-  ).textContent = value;
-
-
-  if (value === 0) {
-
-    status.textContent = "OFF";
-    status.style.color = "#ef4444";
-    dot.style.background = "#ef4444";
-
-  }
-
-  else if (value === 100) {
-
-    status.textContent = "ON";
-    status.style.color = "#22c55e";
-    dot.style.background = "#22c55e";
-
-  }
-
-  else {
-
-    status.textContent = "DIMMING";
-    status.style.color = "#facc15";
-    dot.style.background = "#facc15";
-  }
-}
-
-
-// ======================================
-// CONNECT / DISCONNECT
-// ======================================
-
-async function connectBLE() {
-
-  // Already connected -> Disconnect
-
-  if (
-    bluetoothDevice &&
-    bluetoothDevice.gatt &&
-    bluetoothDevice.gatt.connected
-  ) {
-
-    bluetoothDevice.gatt.disconnect();
-    return;
-  }
-
-
-  // Connect
-
-  try {
-
-    bluetoothDevice =
-      await navigator.bluetooth.requestDevice({
-
-        filters: [
-          {
-            name: "JH_ESP32_BLE"
-          }
-        ],
-
-        optionalServices: [
-          SERVICE_UUID
-        ]
-
-      });
-
-
-    bluetoothDevice.addEventListener(
-      "gattserverdisconnected",
-      onDisconnected
+    await characteristic.writeValue(
+        encoder.encode(command)
     );
 
-
-    const server =
-      await bluetoothDevice.gatt.connect();
-
-
-    const service =
-      await server.getPrimaryService(
-        SERVICE_UUID
-      );
-
-
-    characteristic =
-      await service.getCharacteristic(
-        CHARACTERISTIC_UUID
-      );
-
-
-    setSystemStatus(true);
-    setControls(true);
-
-
-    document.getElementById(
-      "connectButton"
-    ).textContent =
-      "DISCONNECT";
-
-  }
-
-  catch (error) {
-
-    console.log("BLE ERROR:", error);
-
-    characteristic = null;
-
-    setSystemStatus(false);
-    setControls(false);
-
-
-    document.getElementById(
-      "connectButton"
-    ).textContent =
-      "CONNECT BLE";
-  }
+    console.log("Sent:", command);
 }
 
 
-// ======================================
-// DISCONNECTED
-// ======================================
+// -----------------------
+// SPEED +
+// -----------------------
 
-function onDisconnected() {
+async function increaseSpeed()
+{
+    if (speed < 100)
+    {
+        speed += 10;
 
-  characteristic = null;
+        updateSpeedDisplay();
 
-  setSystemStatus(false);
-  setControls(false);
-
-
-  document.getElementById(
-    "connectButton"
-  ).textContent =
-    "CONNECT BLE";
+        await sendCommand(
+            "V" + speed
+        );
+    }
 }
 
 
-// ======================================
-// SEND COMMAND
-// ======================================
+// -----------------------
+// SPEED -
+// -----------------------
 
-async function sendCommand(command) {
+async function decreaseSpeed()
+{
+    if (speed > 10)
+    {
+        speed -= 10;
 
-  if (!characteristic) {
-    return;
-  }
+        updateSpeedDisplay();
 
-  if (!bluetoothDevice) {
-    return;
-  }
-
-  if (!bluetoothDevice.gatt.connected) {
-    return;
-  }
-
-
-  try {
-
-    const data =
-      new TextEncoder().encode(command);
-
-    await characteristic.writeValue(data);
-
-  }
-
-  catch (error) {
-
-    console.log(
-      "WRITE ERROR:",
-      error
-    );
-  }
+        await sendCommand(
+            "V" + speed
+        );
+    }
 }
 
 
-// ======================================
-// CONNECT BUTTON
-// ======================================
-
-document.getElementById(
-  "connectButton"
-).onclick = connectBLE;
-
-
-// ======================================
-// LED ON
-// ======================================
-
-document.getElementById(
-  "onButton"
-).onclick = async function() {
-
-  await sendCommand("ON");
-
-
-  document.getElementById(
-    "brightness"
-  ).value = 100;
-
-
-  updateLedStatus(100);
-};
-
-
-// ======================================
-// LED OFF
-// ======================================
-
-document.getElementById(
-  "offButton"
-).onclick = async function() {
-
-  await sendCommand("OFF");
-
-
-  document.getElementById(
-    "brightness"
-  ).value = 0;
-
-
-  updateLedStatus(0);
-};
-
-
-// ======================================
-// PWM
-// ======================================
-
-document.getElementById(
-  "brightness"
-).oninput = async function() {
-
-  const value =
-    Number(this.value);
-
-
-  updateLedStatus(value);
-
-
-  await sendCommand(
-    value.toString()
-  );
-};
-
-
-// ======================================
-// RESET -> 50%
-// ======================================
-
-document.getElementById(
-  "resetButton"
-).onclick = async function() {
-
-  const value = 50;
-
-
-  document.getElementById(
-    "brightness"
-  ).value = value;
-
-
-  updateLedStatus(value);
-
-
-  await sendCommand("50");
-};
-
-
-// ======================================
-// INITIAL STATE
-// ======================================
-
-setSystemStatus(false);
-updateLedStatus(0);
-setControls(false);
+function updateSpeedDisplay()
+{
+    document.getElementById("speed")
+            .innerHTML =
+            speed + "%";
+}
 
 </script>
 
 </body>
-
 </html>
