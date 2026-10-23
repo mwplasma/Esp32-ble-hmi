@@ -96,8 +96,8 @@ button {
 }
 
 </style>
-
 </head>
+
 
 <body>
 
@@ -109,12 +109,22 @@ button {
 Jeong Hoon Kim (김정훈)
 </div>
 
+
+<!-- ===================================
+     BLE CONNECT
+     =================================== -->
+
 <button class="connect"
         onclick="connectBLE()">
 CONNECT
 </button>
 
 <br><br>
+
+
+<!-- ===================================
+     JOG CONTROL
+     =================================== -->
 
 <button class="jog"
         onclick="sendCommand('R')">
@@ -132,6 +142,11 @@ JOG FWD
         onclick="sendCommand('S')">
 STOP
 </button>
+
+
+<!-- ===================================
+     SPEED CONTROL
+     =================================== -->
 
 <div class="speedTitle">
 JOG SPEED
@@ -156,6 +171,11 @@ JOG SPEED
 
 </div>
 
+
+<!-- ===================================
+     BLE STATUS
+     =================================== -->
+
 <div id="status"
      class="status">
 BLE: DISCONNECTED
@@ -170,8 +190,8 @@ BLE: DISCONNECTED
 // BLE variables
 // ========================================
 
-let bluetoothDevice;
-let characteristic;
+let bluetoothDevice = null;
+let characteristic = null;
 
 
 // ========================================
@@ -204,59 +224,11 @@ async function connectBLE()
 {
     try
     {
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTING...";
+
         bluetoothDevice =
             await navigator.bluetooth.requestDevice(
             {
                 filters:
-                [
-                    {
-                        name: "Project_Rebirth"
-                    }
-                ],
-
-                optionalServices:
-                [
-                    SERVICE_UUID
-                ]
-            });
-
-        const server =
-            await bluetoothDevice.gatt.connect();
-
-        const service =
-            await server.getPrimaryService(
-                SERVICE_UUID
-            );
-
-        characteristic =
-            await service.getCharacteristic(
-                CHARACTERISTIC_UUID
-            );
-
-        document.getElementById("status").innerHTML =
-            "BLE: CONNECTED";
-
-        document.getElementById("status")
-                .classList.add("connected");
-
-        // Send initial speed to ESP32
-        // Default = 10 mm/s
-        await sendCommand(
-            "V" + speed
-        );
-    }
-
-    catch(error)
-    {
-        console.log(error);
-
-        document.getElementById("status").innerHTML =
-            "BLE: CONNECTION FAILED";
-
-        document.getElementById("status")
-                .classList.remove("connected");
-    }
-}
-
-
-// ===================================
+                
