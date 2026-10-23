@@ -1,367 +1,262 @@
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Project Rebirth</title>
+
+<style>
+
+body {
+    margin: 0;
+    background: #10151c;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 25px;
+}
+
+h1 {
+    margin-bottom: 5px;
+    color: #5fc9ff;
+}
+
+.owner {
+    color: #aaaaaa;
+    margin-bottom: 25px;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 20px;
+    margin: 8px;
+    cursor: pointer;
+}
+
+.connect {
+    width: 260px;
+    background: #1976d2;
+}
+
+.jog {
+    width: 220px;
+    height: 90px;
+    background: #167c45;
+}
+
+.stop {
+    width: 220px;
+    height: 80px;
+    background: #c62828;
+}
+
+.speedButton {
+    width: 100px;
+    height: 80px;
+    background: #455a64;
+    font-size: 36px;
+}
+
+.speedDisplay {
+    display: inline-block;
+    width: 160px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.speedTitle {
+    margin-top: 30px;
+    font-size: 20px;
+    color: #aaaaaa;
+}
+
+.status {
+    margin-top: 30px;
+    padding: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #ff5252;
+}
+
+.connected {
+    color: #5cff8d;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>PROJECT REBIRTH</h1>
+
+<div class="owner">
+Jeong Hoon Kim (김정훈)
+</div>
+
+<button class="connect"
+        onclick="connectBLE()">
+CONNECT
+</button>
+
+<br><br>
+
+<button class="jog"
+        onclick="sendCommand('R')">
+JOG REV
+</button>
+
+<button class="jog"
+        onclick="sendCommand('F')">
+JOG FWD
+</button>
+
+<br>
+
+<button class="stop"
+        onclick="sendCommand('S')">
+STOP
+</button>
+
+<div class="speedTitle">
+JOG SPEED
+</div>
+
+<div>
+
+<button class="speedButton"
+        onclick="decreaseSpeed()">
+−
+</button>
+
+<span id="speed"
+      class="speedDisplay">
+10 mm/s
+</span>
+
+<button class="speedButton"
+        onclick="increaseSpeed()">
++
+</button>
+
+</div>
+
+<div id="status"
+     class="status">
+BLE: DISCONNECTED
+</div>
+
+</div>
+
+
+<script>
 
 // ========================================
-// Motor pins
+// BLE variables
 // ========================================
 
-#define PUL_PIN 25
-#define DIR_PIN 27
+let bluetoothDevice;
+let characteristic;
 
-// ========================================
-// BLE UUID
-// ========================================
-
-#define SERVICE_UUID \
-  "12345678-1234-1234-1234-123456789abc"
-
-#define CHARACTERISTIC_UUID \
-  "abcd1234-1234-1234-1234-abcdef123456"
-
-// ========================================
-// Motor / Ball Screw settings
-// ========================================
-
-// Verified driver setting
-const int PULSES_PER_REV = 800;
-
-// Ball screw lead
-const float MM_PER_REV = 5.0;
-
-// 800 pulses/rev / 5 mm/rev = 160 pulses/mm
-const float PULSES_PER_MM =
-    PULSES_PER_REV / MM_PER_REV;
 
 // ========================================
 // JOG speed settings
 // ========================================
 
-float motorSpeedMMs = 10.0;
+let speed = 10;
 
-const float MIN_SPEED_MMS = 5.0;
-const float MAX_SPEED_MMS = 50.0;
-
-// ========================================
-// Motor state
-// ========================================
-
-bool motorRunning = false;
-bool pulseState = HIGH;
-
-unsigned long pulseInterval = 0;
-unsigned long lastPulseTime = 0;
-
-// BLE state
-bool deviceConnected = false;
+const MIN_SPEED = 5;
+const MAX_SPEED = 50;
+const SPEED_STEP = 5;
 
 
 // ========================================
-// Update pulse interval from mm/s
+// BLE UUID
 // ========================================
 
-void updatePulseInterval()
+const SERVICE_UUID =
+"12345678-1234-1234-1234-123456789abc";
+
+const CHARACTERISTIC_UUID =
+"abcd1234-1234-1234-1234-abcdef123456";
+
+
+// ========================================
+// BLE CONNECT
+// ========================================
+
+async function connectBLE()
 {
-  float pulsesPerSecond =
-      PULSES_PER_MM * motorSpeedMMs;
-
-  // Output toggles HIGH/LOW each interval,
-  // therefore use half of 1 second.
-  pulseInterval =
-      (unsigned long)(
-          500000.0 / pulsesPerSecond
-      );
-
-  Serial.print("Speed: ");
-  Serial.print(motorSpeedMMs, 1);
-  Serial.println(" mm/s");
-
-  Serial.print("Pulse Rate: ");
-  Serial.print(pulsesPerSecond, 1);
-  Serial.println(" pulses/sec");
-
-  Serial.print("Pulse Interval: ");
-  Serial.print(pulseInterval);
-  Serial.println(" us");
-}
-
-
-// ========================================
-// Set JOG speed in mm/s
-// ========================================
-
-void setSpeedMMs(float speedMMs)
-{
-  if (speedMMs < MIN_SPEED_MMS)
-    speedMMs = MIN_SPEED_MMS;
-
-  if (speedMMs > MAX_SPEED_MMS)
-    speedMMs = MAX_SPEED_MMS;
-
-  motorSpeedMMs = speedMMs;
-
-  updatePulseInterval();
-}
-
-
-// ========================================
-// Direction control
-// ========================================
-
-void setCW()
-{
-  // DIR- -> GND
-  pinMode(DIR_PIN, OUTPUT);
-  digitalWrite(DIR_PIN, LOW);
-
-  Serial.println("Direction: CW");
-}
-
-
-void setCCW()
-{
-  // DIR- -> OPEN
-  pinMode(DIR_PIN, INPUT);
-
-  Serial.println("Direction: CCW");
-}
-
-
-// ========================================
-// Motor control
-// ========================================
-
-void startMotor()
-{
-  lastPulseTime = micros();
-  motorRunning = true;
-
-  Serial.println("Motor: RUN");
-}
-
-
-void stopMotor()
-{
-  motorRunning = false;
-
-  pulseState = HIGH;
-  digitalWrite(PUL_PIN, HIGH);
-
-  Serial.println("Motor: STOP");
-}
-
-
-// ========================================
-// BLE command processing
-// ========================================
-
-void processCommand(String command)
-{
-  command.trim();
-
-  Serial.print("BLE Command: ");
-  Serial.println(command);
-
-  // Forward / CW
-  if (command == "F")
-  {
-    stopMotor();
-    setCW();
-
-    delay(100);
-
-    startMotor();
-  }
-
-  // Reverse / CCW
-  else if (command == "R")
-  {
-    stopMotor();
-    setCCW();
-
-    delay(100);
-
-    startMotor();
-  }
-
-  // Stop
-  else if (command == "S")
-  {
-    stopMotor();
-  }
-
-  // Speed in mm/s
-  // V5, V10, V15 ... V50
-  else if (command.startsWith("V"))
-  {
-    float speedMMs =
-        command.substring(1).toFloat();
-
-    if (speedMMs >= MIN_SPEED_MMS &&
-        speedMMs <= MAX_SPEED_MMS)
+    try
     {
-      setSpeedMMs(speedMMs);
+        bluetoothDevice =
+            await navigator.bluetooth.requestDevice(
+            {
+                filters:
+                [
+                    {
+                        name: "Project_Rebirth"
+                    }
+                ],
+
+                optionalServices:
+                [
+                    SERVICE_UUID
+                ]
+            });
+
+        const server =
+            await bluetoothDevice.gatt.connect();
+
+        const service =
+            await server.getPrimaryService(
+                SERVICE_UUID
+            );
+
+        characteristic =
+            await service.getCharacteristic(
+                CHARACTERISTIC_UUID
+            );
+
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTED";
+
+        document.getElementById("status")
+                .classList.add("connected");
+
+        // Send initial speed to ESP32
+        // Default = 10 mm/s
+        await sendCommand(
+            "V" + speed
+        );
     }
-  }
-}
 
-
-// ========================================
-// BLE characteristic callback
-// ========================================
-
-class CommandCallback :
-  public BLECharacteristicCallbacks
-{
-  void onWrite(
-      BLECharacteristic *pCharacteristic)
-  {
-    String command =
-        pCharacteristic->getValue().c_str();
-
-    processCommand(command);
-  }
-};
-
-
-// ========================================
-// BLE SERVER CALLBACK
-// Handles connect / disconnect
-// ========================================
-
-class ServerCallbacks :
-  public BLEServerCallbacks
-{
-  void onConnect(BLEServer *pServer)
-  {
-    deviceConnected = true;
-
-    Serial.println();
-    Serial.println("BLE CONNECTED");
-  }
-
-
-  void onDisconnect(BLEServer *pServer)
-  {
-    deviceConnected = false;
-
-    Serial.println();
-    Serial.println("BLE DISCONNECTED");
-
-    // Safety:
-    // Stop motor if communication is lost
-    stopMotor();
-
-    // Start advertising again
-    delay(200);
-
-    pServer->startAdvertising();
-
-    Serial.println(
-        "BLE Advertising Restarted"
-    );
-
-    Serial.println(
-        "Waiting for Galaxy Tab..."
-    );
-  }
-};
-
-
-// ========================================
-// SETUP
-// ========================================
-
-void setup()
-{
-  Serial.begin(115200);
-
-  // IMPORTANT:
-  // Keep verified motor output configuration
-  pinMode(PUL_PIN, OUTPUT_OPEN_DRAIN);
-  digitalWrite(PUL_PIN, HIGH);
-
-  setCW();
-
-  updatePulseInterval();
-
-  // ----------------------------------------
-  // BLE
-  // ----------------------------------------
-
-  BLEDevice::init("Project_Rebirth");
-
-  BLEServer *pServer =
-      BLEDevice::createServer();
-
-  // Connect / disconnect callback
-  pServer->setCallbacks(
-      new ServerCallbacks()
-  );
-
-  BLEService *pService =
-      pServer->createService(
-          SERVICE_UUID
-      );
-
-  BLECharacteristic *pCharacteristic =
-      pService->createCharacteristic(
-          CHARACTERISTIC_UUID,
-          BLECharacteristic::PROPERTY_WRITE
-      );
-
-  pCharacteristic->setCallbacks(
-      new CommandCallback()
-  );
-
-  pService->start();
-
-  BLEAdvertising *pAdvertising =
-      BLEDevice::getAdvertising();
-
-  pAdvertising->addServiceUUID(
-      SERVICE_UUID
-  );
-
-  pAdvertising->setScanResponse(true);
-
-  BLEDevice::startAdvertising();
-
-  Serial.println();
-  Serial.println(
-      "Project Rebirth BLE Ready"
-  );
-
-  Serial.println(
-      "Waiting for Galaxy Tab..."
-  );
-}
-
-
-// ========================================
-// MAIN LOOP
-// ========================================
-
-void loop()
-{
-  if (motorRunning)
-  {
-    unsigned long currentTime =
-        micros();
-
-    if (currentTime - lastPulseTime
-        >= pulseInterval)
+    catch(error)
     {
-      lastPulseTime =
-          currentTime;
+        console.log(error);
 
-      pulseState =
-          !pulseState;
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTION FAILED";
 
-      digitalWrite(
-          PUL_PIN,
-          pulseState
-      );
+        document.getElementById("status")
+                .classList.remove("connected");
     }
-  }
 }
+
+
+// ===================================
