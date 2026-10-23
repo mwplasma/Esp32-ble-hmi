@@ -1,364 +1,1353 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0,
+    maximum-scale=1.0, user-scalable=no"
+  >
 
-<title>Project Rebirth</title>
+  <title>Project Rebirth</title>
 
-<style>
+  <style>
+    :root {
+      --background: #07111f;
+      --panel: #101d2e;
+      --panel-light: #17283d;
+      --border: #30445c;
 
-body {
-    margin: 0;
-    background: #10151c;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
+      --text: #f4f7fb;
+      --muted: #98a9bd;
 
-.container {
-    max-width: 700px;
-    margin: auto;
-    padding: 25px;
-}
+      --blue: #2d8cff;
+      --blue-dark: #1264c5;
 
-h1 {
-    margin-bottom: 5px;
-    color: #5fc9ff;
-}
+      --green: #22c783;
+      --green-dark: #128859;
 
-.owner {
-    color: #aaaaaa;
-    margin-bottom: 25px;
-}
+      --red: #ff4d5d;
+      --red-dark: #b92336;
 
-button {
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
-    padding: 20px;
-    margin: 8px;
-    cursor: pointer;
-}
+      --orange: #ff9c3a;
+      --orange-dark: #bc6412;
 
-.connect {
-    width: 260px;
-    background: #1976d2;
-}
+      --yellow: #ffd54a;
+    }
 
-.jog {
-    width: 220px;
-    height: 90px;
-    background: #167c45;
-}
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.stop {
-    width: 220px;
-    height: 80px;
-    background: #c62828;
-}
-.reset {
-    width: 220px;
-    height: 65px;
-    background: #6a5acd;
-    font-size: 20px;
-}
-.speedButton {
-    width: 100px;
-    height: 80px;
-    background: #455a64;
-    font-size: 36px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          #132946 0%,
+          var(--background) 55%
+        );
+      color: var(--text);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+      user-select: none;
+      overscroll-behavior: none;
+    }
 
-.speedDisplay {
-    display: inline-block;
-    width: 160px;
-    font-size: 32px;
-    font-weight: bold;
-}
+    button {
+      font-family: inherit;
+      touch-action: manipulation;
+    }
 
-.speedTitle {
-    margin-top: 30px;
-    font-size: 20px;
-    color: #aaaaaa;
-}
+    .app-container {
+      width: min(1180px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 18px;
+    }
 
-.status {
-    margin-top: 30px;
-    padding: 15px;
-    font-weight: bold;
-    font-size: 18px;
-    color: #ff5252;
-}
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 16px 20px;
+      background: rgba(16, 29, 46, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+    }
 
-.connected {
-    color: #5cff8d;
-}
+    .header-left {
+      min-width: 0;
+    }
 
-</style>
+    .header-title {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 36px);
+      letter-spacing: 0.8px;
+      line-height: 1.05;
+    }
+
+    .header-subtitle {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .version {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .connection-button {
+      min-width: 210px;
+      min-height: 58px;
+      padding: 12px 20px;
+      border: 1px solid #409eff;
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, var(--blue), var(--blue-dark));
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      box-shadow: 0 6px 16px rgba(45, 140, 255, 0.28);
+    }
+
+    .connection-button.connected {
+      border-color: #41e9a5;
+      background:
+        linear-gradient(180deg, var(--green), var(--green-dark));
+      box-shadow: 0 6px 16px rgba(34, 199, 131, 0.28);
+    }
+
+    .connection-button:active {
+      transform: translateY(2px);
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .status-box {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      background: rgba(16, 29, 46, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .status-box.connected {
+      color: #56eeb1;
+      border-color: #259f70;
+      background: rgba(18, 98, 72, 0.24);
+    }
+
+    .status-box.running {
+      color: var(--yellow);
+      border-color: #977d18;
+      background: rgba(120, 95, 10, 0.22);
+    }
+
+    .status-box.stopped {
+      color: #77aefc;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+    }
+
+    .panel {
+      padding: 18px;
+      background: rgba(16, 29, 46, 0.97);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26);
+    }
+
+    .panel-title {
+      margin: 0 0 16px;
+      color: #bdd8fa;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .position-current {
+      margin-bottom: 14px;
+      padding: 22px 18px;
+      border: 2px solid var(--blue);
+      border-radius: 18px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(45, 140, 255, 0.18),
+          rgba(15, 31, 51, 0.7)
+        );
+      text-align: center;
+    }
+
+    .position-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .position-value {
+      margin-top: 8px;
+      color: white;
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+    }
+
+    .position-unit {
+      margin-left: 7px;
+      color: #a8c9ef;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .setpoint-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .setpoint-card {
+      padding: 16px;
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .setpoint-card.start {
+      border-top: 4px solid var(--green);
+    }
+
+    .setpoint-card.end {
+      border-top: 4px solid var(--orange);
+    }
+
+    .setpoint-value {
+      margin: 10px 0 14px;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .set-button {
+      width: 100%;
+      min-height: 62px;
+      border: 0;
+      border-radius: 13px;
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .set-button.start {
+      background:
+        linear-gradient(180deg, var(--green), var(--green-dark));
+    }
+
+    .set-button.end {
+      background:
+        linear-gradient(180deg, var(--orange), var(--orange-dark));
+    }
+
+    .set-button:disabled {
+      opacity: 0.38;
+    }
+
+    .jog-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .jog-button {
+      width: 100%;
+      min-height: 86px;
+      border-radius: 16px;
+      border: 1px solid #56a5ff;
+      background:
+        linear-gradient(180deg, #338fff, #1459ac);
+      color: white;
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      box-shadow: 0 6px 15px rgba(44, 136, 244, 0.22);
+    }
+
+    .jog-button.stop {
+      min-height: 92px;
+      border-color: #ff7180;
+      background:
+        linear-gradient(180deg, var(--red), var(--red-dark));
+      box-shadow: 0 6px 15px rgba(255, 77, 93, 0.25);
+      font-size: 28px;
+    }
+
+    .jog-button.active {
+      outline: 4px solid rgba(255, 213, 74, 0.8);
+      transform: scale(0.985);
+    }
+
+    .jog-button:disabled {
+      opacity: 0.35;
+      box-shadow: none;
+    }
+
+    .jog-button:active:not(:disabled),
+    .set-button:active:not(:disabled),
+    .speed-button:active:not(:disabled),
+    .reset-button:active:not(:disabled) {
+      transform: translateY(2px);
+    }
+
+    .speed-panel {
+      margin-top: 16px;
+    }
+
+    .speed-display {
+      margin-bottom: 14px;
+      padding: 18px;
+      border-radius: 16px;
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .speed-value {
+      margin-top: 6px;
+      color: white;
+      font-size: 46px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .speed-unit {
+      margin-left: 5px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .speed-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .speed-button {
+      min-height: 68px;
+      border: 1px solid #71869f;
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #344b66, #22364d);
+      color: white;
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .speed-button:disabled {
+      opacity: 0.35;
+    }
+
+    .reset-button {
+      width: 100%;
+      min-height: 58px;
+      margin-top: 12px;
+      border: 1px solid #8c9db0;
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, #52677e, #35495e);
+      color: white;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .reset-button:disabled {
+      opacity: 0.35;
+    }
+
+    .message-box {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: rgba(7, 17, 31, 0.58);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .footer {
+      padding: 14px 6px 2px;
+      color: #667a91;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .header {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .version {
+        text-align: center;
+      }
+
+      .connection-button {
+        width: 100%;
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .app-container {
+        padding: 10px;
+      }
+
+      .status-row {
+        grid-template-columns: 1fr;
+      }
+
+      .setpoint-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 13px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="app-container">
 
-<div class="container">
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<h1>PROJECT REBIRTH</h1>
+    <header class="header">
+      <div class="header-left">
+        <h1 class="header-title">PROJECT REBIRTH</h1>
 
-<div class="owner">
-Jeong Hoon Kim (김정훈)
-</div>
+        <div class="header-subtitle">
+          Stepper Motor BLE HMI
+        </div>
+      </div>
 
-<button class="connect"
-        onclick="connectBLE()">
-CONNECT
-</button>
+      <button
+        id="connectButton"
+        class="connection-button"
+        type="button"
+      >
+        CONNECT
+      </button>
 
-<br><br>
+      <div class="version">
+        v0.4 Setpoints<br>
+        Jeong Hoon Kim
+      </div>
+    </header>
 
-<button class="jog"
-        onclick="sendCommand('R')">
-JOG REV
-</button>
+    <!-- =====================================================
+         BLE AND MOTOR STATUS
+         ===================================================== -->
 
-<button class="jog"
-        onclick="sendCommand('F')">
-JOG FWD
-</button>
+    <section class="status-row">
+      <div
+        id="bleStatus"
+        class="status-box"
+      >
+        BLE: DISCONNECTED
+      </div>
 
-<br>
+      <div
+        id="motorStatus"
+        class="status-box stopped"
+      >
+        MOTOR: STOPPED
+      </div>
+    </section>
 
-<button class="stop"
-        onclick="sendCommand('S')">
-STOP
-</button>
-<br>
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
 
-<button class="reset"
-        onclick="resetSpeed()">
-RESET SPEED
-</button>
-      
-<div class="speedTitle">
-JOG SPEED
-</div>
+    <main class="main-grid">
 
-<div>
+      <!-- ===================================================
+           POSITION PANEL
+           =================================================== -->
 
-<button class="speedButton"
-        onclick="decreaseSpeed()">
-−
-</button>
+      <section class="panel">
+        <h2 class="panel-title">Position</h2>
 
-<span id="speed"
-      class="speedDisplay">
-10 mm/s
-</span>
+        <div class="position-current">
+          <div class="position-label">
+            Current Position
+          </div>
 
-<button class="speedButton"
-        onclick="increaseSpeed()">
-+
-</button>
+          <div>
+            <span
+              id="currentPosition"
+              class="position-value"
+            >
+              0.00
+            </span>
 
-</div>
+            <span class="position-unit">mm</span>
+          </div>
+        </div>
 
-<div id="status"
-     class="status">
-BLE: DISCONNECTED
-</div>
+        <div class="setpoint-grid">
 
-</div>
+          <!-- START POSITION -->
 
+          <div class="setpoint-card start">
+            <div class="position-label">
+              Start Position
+            </div>
 
-<script>
+            <div class="setpoint-value">
+              <span id="startPosition">0.00</span>
+              <span class="position-unit">mm</span>
+            </div>
 
-// ========================================
-// BLE variables
-// ========================================
+            <button
+              id="setStartButton"
+              class="set-button start motor-control"
+              type="button"
+              disabled
+            >
+              SET START
+            </button>
+          </div>
 
-let bluetoothDevice = null;
-let characteristic = null;
+          <!-- END POSITION -->
 
+          <div class="setpoint-card end">
+            <div class="position-label">
+              End Position
+            </div>
 
-// ========================================
-// JOG speed settings
-// ========================================
+            <div class="setpoint-value">
+              <span id="endPosition">0.00</span>
+              <span class="position-unit">mm</span>
+            </div>
 
-let speed = 10;
+            <button
+              id="setEndButton"
+              class="set-button end motor-control"
+              type="button"
+              disabled
+            >
+              SET END
+            </button>
+          </div>
 
-const MIN_SPEED = 5;
-const MAX_SPEED = 50;
-const SPEED_STEP = 5;
+        </div>
+      </section>
 
+      <!-- ===================================================
+           JOG PANEL
+           =================================================== -->
 
-// ========================================
-// BLE UUID
-// ========================================
+      <section class="panel">
+        <h2 class="panel-title">Manual Jog</h2>
 
-const SERVICE_UUID =
-"12345678-1234-1234-1234-123456789abc";
+        <div class="jog-controls">
+          <button
+            id="jogForwardButton"
+            class="jog-button motor-control"
+            type="button"
+            disabled
+          >
+            JOG FWD ▶
+          </button>
 
-const CHARACTERISTIC_UUID =
-"abcd1234-1234-1234-1234-abcdef123456";
+          <button
+            id="stopButton"
+            class="jog-button stop motor-control"
+            type="button"
+            disabled
+          >
+            STOP
+          </button>
 
+          <button
+            id="jogReverseButton"
+            class="jog-button motor-control"
+            type="button"
+            disabled
+          >
+            ◀ JOG REV
+          </button>
+        </div>
 
-// ========================================
-// BLE CONNECT
-// ========================================
+        <!-- SPEED -->
 
-async function connectBLE()
-{
-    try
-    {
-        document.getElementById("status").innerHTML =
-            "BLE: CONNECTING...";
+        <div class="speed-panel">
+          <h2 class="panel-title">Set Speed</h2>
+
+          <div class="speed-display">
+            <div class="position-label">
+              Command Speed
+            </div>
+
+            <div>
+              <span
+                id="speedValue"
+                class="speed-value"
+              >
+                10
+              </span>
+
+              <span class="speed-unit">mm/s</span>
+            </div>
+          </div>
+
+          <div class="speed-controls">
+            <button
+              id="speedDownButton"
+              class="speed-button motor-control"
+              type="button"
+              disabled
+            >
+              −
+            </button>
+
+            <button
+              id="speedUpButton"
+              class="speed-button motor-control"
+              type="button"
+              disabled
+            >
+              +
+            </button>
+          </div>
+
+          <button
+            id="resetSpeedButton"
+            class="reset-button motor-control"
+            type="button"
+            disabled
+          >
+            RESET SPEED TO 10 mm/s
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <div
+      id="messageBox"
+      class="message-box"
+    >
+      Press CONNECT to connect to Project Rebirth.
+    </div>
+
+    <footer class="footer">
+      Project Rebirth · Jeong Hoon Kim
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    // ========================================================
+    // BLE UUID DEFINITIONS
+    // ========================================================
+
+    const SERVICE_UUID =
+      "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+
+    const RX_CHARACTERISTIC_UUID =
+      "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+
+    const TX_CHARACTERISTIC_UUID =
+      "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+    // ========================================================
+    // BLE OBJECTS
+    // ========================================================
+
+    let bluetoothDevice = null;
+    let bleServer = null;
+    let rxCharacteristic = null;
+    let txCharacteristic = null;
+
+    let isConnected = false;
+    let motorState = "STOP";
+
+    // Prevent simultaneous writes to the BLE characteristic.
+    let writeQueue = Promise.resolve();
+
+    const textEncoder = new TextEncoder();
+    const textDecoder = new TextDecoder();
+
+    // ========================================================
+    // HTML ELEMENTS
+    // ========================================================
+
+    const connectButton =
+      document.getElementById("connectButton");
+
+    const bleStatus =
+      document.getElementById("bleStatus");
+
+    const motorStatus =
+      document.getElementById("motorStatus");
+
+    const currentPosition =
+      document.getElementById("currentPosition");
+
+    const startPosition =
+      document.getElementById("startPosition");
+
+    const endPosition =
+      document.getElementById("endPosition");
+
+    const speedValue =
+      document.getElementById("speedValue");
+
+    const setStartButton =
+      document.getElementById("setStartButton");
+
+    const setEndButton =
+      document.getElementById("setEndButton");
+
+    const jogForwardButton =
+      document.getElementById("jogForwardButton");
+
+    const jogReverseButton =
+      document.getElementById("jogReverseButton");
+
+    const stopButton =
+      document.getElementById("stopButton");
+
+    const speedUpButton =
+      document.getElementById("speedUpButton");
+
+    const speedDownButton =
+      document.getElementById("speedDownButton");
+
+    const resetSpeedButton =
+      document.getElementById("resetSpeedButton");
+
+    const messageBox =
+      document.getElementById("messageBox");
+
+    const motorControlButtons =
+      document.querySelectorAll(".motor-control");
+
+    // ========================================================
+    // SCREEN UPDATE FUNCTIONS
+    // ========================================================
+
+    function setMessage(message) {
+      messageBox.textContent = message;
+    }
+
+    function enableMotorControls(enabled) {
+      motorControlButtons.forEach((button) => {
+        button.disabled = !enabled;
+      });
+    }
+
+    function updateConnectionDisplay(connected) {
+      isConnected = connected;
+
+      if (connected) {
+        connectButton.textContent = "DISCONNECT";
+        connectButton.classList.add("connected");
+
+        bleStatus.textContent = "BLE: CONNECTED";
+        bleStatus.classList.add("connected");
+
+        enableMotorControls(true);
+      }
+      else {
+        connectButton.textContent = "CONNECT";
+        connectButton.classList.remove("connected");
+
+        bleStatus.textContent = "BLE: DISCONNECTED";
+        bleStatus.classList.remove("connected");
+
+        enableMotorControls(false);
+
+        updateMotorDisplay("STOP");
+      }
+    }
+
+    function updateMotorDisplay(state) {
+      motorState = state;
+
+      jogForwardButton.classList.remove("active");
+      jogReverseButton.classList.remove("active");
+      stopButton.classList.remove("active");
+
+      motorStatus.classList.remove(
+        "running",
+        "stopped"
+      );
+
+      if (state === "FWD") {
+        motorStatus.textContent = "MOTOR: JOG FORWARD";
+        motorStatus.classList.add("running");
+        jogForwardButton.classList.add("active");
+      }
+      else if (state === "REV") {
+        motorStatus.textContent = "MOTOR: JOG REVERSE";
+        motorStatus.classList.add("running");
+        jogReverseButton.classList.add("active");
+      }
+      else {
+        motorStatus.textContent = "MOTOR: STOPPED";
+        motorStatus.classList.add("stopped");
+        stopButton.classList.add("active");
+      }
+    }
+
+    // ========================================================
+    // CONNECT OR DISCONNECT BUTTON
+    // ========================================================
+
+    connectButton.addEventListener("click", async () => {
+      if (isConnected) {
+        await disconnectBLE();
+      }
+      else {
+        await connectBLE();
+      }
+    });
+
+    // ========================================================
+    // BLE CONNECTION
+    // ========================================================
+
+    async function connectBLE() {
+      if (!navigator.bluetooth) {
+        setMessage(
+          "Web Bluetooth is not supported in this browser."
+        );
+
+        return;
+      }
+
+      try {
+        connectButton.disabled = true;
+        connectButton.textContent = "CONNECTING...";
+
+        bleStatus.textContent = "BLE: CONNECTING...";
+
+        setMessage(
+          "Select Project Rebirth from the Bluetooth window."
+        );
 
         bluetoothDevice =
-            await navigator.bluetooth.requestDevice(
-            {
-                filters:
-                [
-                    {
-                        name: "Project_Rebirth"
-                    }
-                ],
+          await navigator.bluetooth.requestDevice({
+            filters: [
+              {
+                services: [SERVICE_UUID]
+              }
+            ],
 
-                optionalServices:
-                [
-                    SERVICE_UUID
-                ]
-            });
+            optionalServices: [
+              SERVICE_UUID
+            ]
+          });
 
-        const server =
-            await bluetoothDevice.gatt.connect();
+        bluetoothDevice.addEventListener(
+          "gattserverdisconnected",
+          handleUnexpectedDisconnect
+        );
+
+        setMessage("Connecting to BLE GATT server...");
+
+        bleServer =
+          await bluetoothDevice.gatt.connect();
 
         const service =
-            await server.getPrimaryService(
-                SERVICE_UUID
-            );
+          await bleServer.getPrimaryService(
+            SERVICE_UUID
+          );
 
-        characteristic =
-            await service.getCharacteristic(
-                CHARACTERISTIC_UUID
-            );
+        rxCharacteristic =
+          await service.getCharacteristic(
+            RX_CHARACTERISTIC_UUID
+          );
 
-        document.getElementById("status").innerHTML =
-            "BLE: CONNECTED";
+        txCharacteristic =
+          await service.getCharacteristic(
+            TX_CHARACTERISTIC_UUID
+          );
 
-        document.getElementById("status")
-                .classList.add("connected");
+        await txCharacteristic.startNotifications();
 
-        await sendCommand("V" + speed);
+        txCharacteristic.addEventListener(
+          "characteristicvaluechanged",
+          handleBLEMessage
+        );
+
+        updateConnectionDisplay(true);
+
+        setMessage(
+          "Connected to Project Rebirth."
+        );
+
+        // Ask the ESP32 for the current position.
+        await sendCommand("POS");
+      }
+      catch (error) {
+        console.error("BLE connection error:", error);
+
+        updateConnectionDisplay(false);
+
+        if (error.name === "NotFoundError") {
+          setMessage(
+            "Connection cancelled or Project Rebirth was not selected."
+          );
+        }
+        else {
+          setMessage(
+            "BLE connection failed: " + error.message
+          );
+        }
+      }
+      finally {
+        connectButton.disabled = false;
+
+        if (!isConnected) {
+          connectButton.textContent = "CONNECT";
+        }
+      }
     }
 
-    catch(error)
-    {
-        console.log(error);
+    // ========================================================
+    // MANUAL DISCONNECT
+    // ========================================================
 
-        document.getElementById("status").innerHTML =
-            "BLE: CONNECTION FAILED";
+    async function disconnectBLE() {
+      try {
+        if (isConnected && rxCharacteristic) {
+          await sendCommand("STOP");
+        }
+      }
+      catch (error) {
+        console.warn(
+          "STOP command before disconnect failed:",
+          error
+        );
+      }
 
-        document.getElementById("status")
-                .classList.remove("connected");
+      if (
+        bluetoothDevice &&
+        bluetoothDevice.gatt &&
+        bluetoothDevice.gatt.connected
+      ) {
+        bluetoothDevice.gatt.disconnect();
+      }
+
+      clearBLEObjects();
+      updateConnectionDisplay(false);
+
+      setMessage("BLE disconnected.");
     }
-}
 
+    // ========================================================
+    // UNEXPECTED DISCONNECT
+    // ========================================================
 
-// ========================================
-// SEND BLE COMMAND
-// ========================================
+    function handleUnexpectedDisconnect() {
+      clearBLEObjects();
+      updateConnectionDisplay(false);
 
-async function sendCommand(command)
-{
-    if (!characteristic)
-    {
-        alert("BLE is not connected.");
+      setMessage(
+        "BLE connection lost. Motor stop was applied by ESP32."
+      );
+    }
+
+    function clearBLEObjects() {
+      rxCharacteristic = null;
+      txCharacteristic = null;
+      bleServer = null;
+      writeQueue = Promise.resolve();
+    }
+
+    // ========================================================
+    // BLE COMMAND TRANSMISSION
+    // ========================================================
+
+    function sendCommand(command) {
+      writeQueue = writeQueue
+        .catch(() => {
+          // Keep the queue usable after an earlier failed write.
+        })
+        .then(async () => {
+          if (
+            !isConnected ||
+            !rxCharacteristic ||
+            !bluetoothDevice ||
+            !bluetoothDevice.gatt.connected
+          ) {
+            throw new Error(
+              "Project Rebirth is not connected."
+            );
+          }
+
+          const commandData =
+            textEncoder.encode(command);
+
+          if (
+            typeof rxCharacteristic
+              .writeValueWithoutResponse === "function"
+          ) {
+            await rxCharacteristic
+              .writeValueWithoutResponse(commandData);
+          }
+          else {
+            await rxCharacteristic
+              .writeValue(commandData);
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "BLE command failed:",
+            command,
+            error
+          );
+
+          setMessage(
+            "Command failed: " + command
+          );
+
+          throw error;
+        });
+
+      return writeQueue;
+    }
+
+    // ========================================================
+    // BLE MESSAGE RECEPTION
+    // ========================================================
+
+    function handleBLEMessage(event) {
+      const value = event.target.value;
+
+      const message = textDecoder
+        .decode(value)
+        .trim();
+
+      if (!message) {
         return;
-    }
+      }
 
-    try
-    {
-        const encoder =
-            new TextEncoder();
+      console.log("ESP32:", message);
 
-        await characteristic.writeValue(
-            encoder.encode(command)
+      const parts = message.split(",");
+      const messageType = parts[0];
+
+      // ------------------------------------------------------
+      // Position message:
+      // POS,current,start,end,speed
+      // ------------------------------------------------------
+
+      if (
+        messageType === "POS" &&
+        parts.length >= 5
+      ) {
+        const current = Number(parts[1]);
+        const start = Number(parts[2]);
+        const end = Number(parts[3]);
+        const speed = Number(parts[4]);
+
+        if (Number.isFinite(current)) {
+          currentPosition.textContent =
+            current.toFixed(2);
+        }
+
+        if (Number.isFinite(start)) {
+          startPosition.textContent =
+            start.toFixed(2);
+        }
+
+        if (Number.isFinite(end)) {
+          endPosition.textContent =
+            end.toFixed(2);
+        }
+
+        if (Number.isFinite(speed)) {
+          speedValue.textContent =
+            speed.toFixed(0);
+        }
+      }
+
+      // ------------------------------------------------------
+      // Speed message:
+      // SPEED,10
+      // ------------------------------------------------------
+
+      else if (
+        messageType === "SPEED" &&
+        parts.length >= 2
+      ) {
+        const speed = Number(parts[1]);
+
+        if (Number.isFinite(speed)) {
+          speedValue.textContent =
+            speed.toFixed(0);
+        }
+      }
+
+      // ------------------------------------------------------
+      // Motor state:
+      // STATE,FWD
+      // STATE,REV
+      // STATE,STOP
+      // ------------------------------------------------------
+
+      else if (
+        messageType === "STATE" &&
+        parts.length >= 2
+      ) {
+        updateMotorDisplay(parts[1]);
+      }
+
+      // ------------------------------------------------------
+      // User message
+      // ------------------------------------------------------
+
+      else if (
+        messageType === "MESSAGE" &&
+        parts.length >= 2
+      ) {
+        setMessage(parts.slice(1).join(","));
+      }
+
+      // ------------------------------------------------------
+      // Error message
+      // ------------------------------------------------------
+
+      else if (messageType === "ERROR") {
+        setMessage(
+          "ESP32 error: " + parts.slice(1).join(",")
         );
-
-        console.log("Sent:", command);
+      }
     }
 
-    catch(error)
-    {
-        console.log(error);
-    }
-}
+    // ========================================================
+    // JOG BUTTON EVENTS
+    // ========================================================
 
+    jogForwardButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("JOG_FWD");
 
-// ========================================
-// SPEED +
-// ========================================
+          setMessage(
+            "Jog Forward command sent."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-async function increaseSpeed()
-{
-    if (speed < MAX_SPEED)
-    {
-        speed += SPEED_STEP;
+    jogReverseButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("JOG_REV");
 
-        updateSpeedDisplay();
+          setMessage(
+            "Jog Reverse command sent."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-        await sendCommand(
-            "V" + speed
-        );
-    }
-}
+    stopButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("STOP");
 
+          setMessage("Stop command sent.");
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-// ========================================
-// SPEED -
-// ========================================
+    // ========================================================
+    // SETPOINT BUTTON EVENTS
+    // ========================================================
 
-async function decreaseSpeed()
-{
-    if (speed > MIN_SPEED)
-    {
-        speed -= SPEED_STEP;
+    setStartButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          // Stop before recording the setpoint.
+          await sendCommand("STOP");
+          await sendCommand("SET_START");
 
-        updateSpeedDisplay();
+          setMessage(
+            "Current position saved as Start Position."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-        await sendCommand(
-            "V" + speed
-        );
-    }
-}
-// ========================================
-// RESET SPEED
-// ========================================
+    setEndButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          // Stop before recording the setpoint.
+          await sendCommand("STOP");
+          await sendCommand("SET_END");
 
-async function resetSpeed()
-{
-    speed = 10;
+          setMessage(
+            "Current position saved as End Position."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-    updateSpeedDisplay();
+    // ========================================================
+    // SPEED BUTTON EVENTS
+    // ========================================================
 
-    await sendCommand("V10");
-}
+    speedUpButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("SPEED_UP");
 
-// ========================================
-// UPDATE SPEED DISPLAY
-// ========================================
+          setMessage(
+            "Speed increased by 5 mm/s."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
-function updateSpeedDisplay()
-{
-    document.getElementById("speed").innerHTML =
-        speed + " mm/s";
-}
+    speedDownButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("SPEED_DOWN");
 
-</script>
+          setMessage(
+            "Speed decreased by 5 mm/s."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
 
+    resetSpeedButton.addEventListener(
+      "click",
+      async () => {
+        try {
+          await sendCommand("RESET_SPEED");
+
+          setMessage(
+            "Speed reset to 10 mm/s."
+          );
+        }
+        catch (error) {
+          console.error(error);
+        }
+      }
+    );
+
+    // ========================================================
+    // SAFETY ACTIONS
+    // ========================================================
+
+    /*
+      If the page is hidden or the Galaxy Tab changes tabs,
+      attempt to send STOP.
+
+      BLE browser operations during page shutdown are not always
+      guaranteed, so the ESP32 also stops the motor whenever the
+      BLE connection is lost.
+    */
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (
+          document.hidden &&
+          isConnected &&
+          motorState !== "STOP"
+        ) {
+          sendCommand("STOP").catch(() => {});
+        }
+      }
+    );
+
+    // ========================================================
+    // INITIAL SCREEN
+    // ========================================================
+
+    updateConnectionDisplay(false);
+    updateMotorDisplay("STOP");
+  </script>
 </body>
 </html>
