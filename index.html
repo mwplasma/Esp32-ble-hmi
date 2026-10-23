@@ -5,9 +5,15 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0,
-    maximum-scale=1.0, user-scalable=no"
+    content="width=device-width,
+             height=device-height,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no,
+             viewport-fit=cover"
   >
+
+  <meta name="theme-color" content="#07111f">
 
   <title>Project Rebirth</title>
 
@@ -22,7 +28,7 @@
       --muted: #98a9bd;
 
       --blue: #2d8cff;
-      --blue-dark: #1264c5;
+      --blue-dark: #1459ac;
 
       --green: #22c783;
       --green-dark: #128859;
@@ -34,6 +40,11 @@
       --orange-dark: #bc6412;
 
       --yellow: #ffd54a;
+
+      --header-height: 66px;
+      --footer-height: 40px;
+      --gap: 8px;
+      --radius: 13px;
     }
 
     * {
@@ -41,577 +52,1080 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html,
     body {
+      width: 100%;
+      height: 100%;
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
+    body {
       background:
         radial-gradient(
           circle at top,
           #132946 0%,
-          var(--background) 55%
+          var(--background) 62%
         );
+
       color: var(--text);
+
       font-family:
         Arial,
         Helvetica,
         sans-serif;
-      user-select: none;
-      overscroll-behavior: none;
-    }
 
-    button {
-      font-family: inherit;
+      user-select: none;
       touch-action: manipulation;
     }
 
-    .app-container {
-      width: min(1180px, 100%);
-      min-height: 100vh;
-      margin: 0 auto;
-      padding: 18px;
+    button {
+      margin: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+
+      color: white;
+      font-family: inherit;
+
+      cursor: pointer;
+      touch-action: manipulation;
     }
+
+    button:disabled {
+      cursor: default;
+      opacity: 0.34;
+      filter: grayscale(35%);
+      box-shadow: none !important;
+    }
+
+    /*
+      ==========================================================
+      ENTIRE SCREEN CONTAINER
+      ==========================================================
+    */
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+
+      display: grid;
+
+      grid-template-rows:
+        var(--header-height)
+        minmax(0, 1fr)
+        var(--footer-height);
+
+      gap: var(--gap);
+
+      padding:
+        max(8px, env(safe-area-inset-top))
+        max(8px, env(safe-area-inset-right))
+        max(8px, env(safe-area-inset-bottom))
+        max(8px, env(safe-area-inset-left));
+
+      overflow: hidden;
+    }
+
+    /*
+      ==========================================================
+      HEADER
+      ==========================================================
+    */
 
     .header {
+      min-width: 0;
+      min-height: 0;
+
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+
+      grid-template-columns:
+        minmax(220px, 1fr)
+        minmax(180px, 0.7fr)
+        190px;
+
       align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-      padding: 16px 20px;
-      background: rgba(16, 29, 46, 0.95);
+      gap: 12px;
+
+      padding: 8px 14px;
+
+      background: rgba(16, 29, 46, 0.97);
+
       border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      border-radius: var(--radius);
+
+      box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.25);
     }
 
-    .header-left {
+    .title-area {
       min-width: 0;
     }
 
-    .header-title {
+    .main-title {
       margin: 0;
-      font-size: clamp(23px, 3vw, 36px);
-      letter-spacing: 0.8px;
-      line-height: 1.05;
-    }
 
-    .header-subtitle {
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+      overflow: hidden;
 
-    .version {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: right;
-    }
-
-    .connection-button {
-      min-width: 210px;
-      min-height: 58px;
-      padding: 12px 20px;
-      border: 1px solid #409eff;
-      border-radius: 14px;
-      background:
-        linear-gradient(180deg, var(--blue), var(--blue-dark));
       color: white;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      box-shadow: 0 6px 16px rgba(45, 140, 255, 0.28);
+
+      font-size: clamp(21px, 2.4vw, 31px);
+      font-weight: 900;
+
+      line-height: 1;
+      letter-spacing: 0.8px;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .connection-button.connected {
-      border-color: #41e9a5;
-      background:
-        linear-gradient(180deg, var(--green), var(--green-dark));
-      box-shadow: 0 6px 16px rgba(34, 199, 131, 0.28);
+    .subtitle {
+      margin-top: 5px;
+
+      color: var(--muted);
+
+      font-size: clamp(10px, 1.1vw, 13px);
+      font-weight: 700;
+
+      letter-spacing: 0.5px;
     }
 
-    .connection-button:active {
-      transform: translateY(2px);
-    }
+    .ble-status {
+      min-width: 0;
+      min-height: 42px;
 
-    .status-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .status-box {
-      min-height: 54px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px 14px;
-      background: rgba(16, 29, 46, 0.96);
+
+      padding: 7px 12px;
+
+      overflow: hidden;
+
+      background: rgba(7, 17, 31, 0.65);
+
       border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--muted);
-      font-weight: 800;
-      letter-spacing: 0.5px;
+      border-radius: 10px;
+
+      color: #77aefc;
+
+      font-size: clamp(12px, 1.3vw, 16px);
+      font-weight: 900;
+
+      letter-spacing: 0.4px;
       text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .status-box.connected {
+    .ble-status.connected {
       color: #56eeb1;
       border-color: #259f70;
-      background: rgba(18, 98, 72, 0.24);
+      background: rgba(18, 98, 72, 0.25);
     }
 
-    .status-box.running {
-      color: var(--yellow);
-      border-color: #977d18;
-      background: rgba(120, 95, 10, 0.22);
-    }
+    .connect-button {
+      width: 100%;
+      height: 46px;
 
-    .status-box.stopped {
-      color: #77aefc;
-    }
+      border: 1px solid #53a7ff;
+      border-radius: 10px;
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 16px;
-    }
-
-    .panel {
-      padding: 18px;
-      background: rgba(16, 29, 46, 0.97);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26);
-    }
-
-    .panel-title {
-      margin: 0 0 16px;
-      color: #bdd8fa;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-
-    .position-current {
-      margin-bottom: 14px;
-      padding: 22px 18px;
-      border: 2px solid var(--blue);
-      border-radius: 18px;
       background:
         linear-gradient(
           180deg,
-          rgba(45, 140, 255, 0.18),
-          rgba(15, 31, 51, 0.7)
+          var(--blue),
+          var(--blue-dark)
         );
-      text-align: center;
+
+      font-size: clamp(14px, 1.5vw, 18px);
+      font-weight: 900;
+
+      letter-spacing: 0.6px;
+
+      box-shadow:
+        0 5px 14px rgba(45, 140, 255, 0.28);
+    }
+
+    .connect-button.connected {
+      border-color: #52eaae;
+
+      background:
+        linear-gradient(
+          180deg,
+          var(--green),
+          var(--green-dark)
+        );
+
+      box-shadow:
+        0 5px 14px rgba(34, 199, 131, 0.27);
+    }
+
+    .connect-button:active:not(:disabled) {
+      transform: translateY(2px);
+    }
+
+    /*
+      ==========================================================
+      MAIN AREA
+      ==========================================================
+    */
+
+    .main {
+      min-width: 0;
+      min-height: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+      gap: var(--gap);
+
+      overflow: hidden;
+    }
+
+    .panel {
+      min-width: 0;
+      min-height: 0;
+
+      padding: 10px;
+
+      overflow: hidden;
+
+      background: rgba(16, 29, 46, 0.97);
+
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+
+      box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.23);
+    }
+
+    .section-title {
+      margin: 0;
+
+      color: #bdd8fa;
+
+      font-size: clamp(11px, 1.2vw, 14px);
+      font-weight: 900;
+
+      line-height: 1;
+      letter-spacing: 1.1px;
+
+      text-transform: uppercase;
+    }
+
+    /*
+      ==========================================================
+      LEFT PANEL: POSITION
+      ==========================================================
+    */
+
+    .position-panel {
+      display: grid;
+
+      grid-template-rows:
+        minmax(0, 1.05fr)
+        minmax(0, 0.95fr);
+
+      gap: 8px;
+    }
+
+    .current-position-card {
+      min-width: 0;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 6px 12px;
+
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(45, 140, 255, 0.20),
+          rgba(15, 31, 51, 0.76)
+        );
+
+      border: 2px solid var(--blue);
+      border-radius: 13px;
     }
 
     .position-label {
       color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 1px;
+
+      font-size: clamp(10px, 1.25vw, 14px);
+      font-weight: 900;
+
+      line-height: 1;
+      letter-spacing: 0.8px;
+
       text-transform: uppercase;
     }
 
-    .position-value {
-      margin-top: 8px;
-      color: white;
-      font-size: clamp(40px, 7vw, 72px);
-      font-weight: 900;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 1px;
+    .current-position-line {
+      min-width: 0;
+
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+
+      margin-top: 5px;
+
+      white-space: nowrap;
     }
 
-    .position-unit {
-      margin-left: 7px;
-      color: #a8c9ef;
-      font-size: 22px;
-      font-weight: 800;
+    .current-position-value {
+      color: white;
+
+      font-size: clamp(42px, 8.5vh, 75px);
+      font-weight: 900;
+
+      line-height: 0.98;
+      letter-spacing: 1px;
+
+      font-variant-numeric: tabular-nums;
     }
+
+    .large-unit {
+      margin-left: 7px;
+
+      color: #a8c9ef;
+
+      font-size: clamp(16px, 2.6vh, 24px);
+      font-weight: 900;
+    }
+
+    /*
+      ==========================================================
+      SETPOINT CARDS
+      ==========================================================
+    */
 
     .setpoint-grid {
+      min-width: 0;
+      min-height: 0;
+
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+      gap: 8px;
     }
 
     .setpoint-card {
-      padding: 16px;
+      min-width: 0;
+      min-height: 0;
+
+      display: grid;
+
+      grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        clamp(42px, 7.2vh, 58px);
+
+      align-items: center;
+      gap: 4px;
+
+      padding: 8px;
+
+      overflow: hidden;
+
       background: var(--panel-light);
+
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 12px;
     }
 
-    .setpoint-card.start {
+    .setpoint-card.start-card {
       border-top: 4px solid var(--green);
     }
 
-    .setpoint-card.end {
+    .setpoint-card.end-card {
       border-top: 4px solid var(--orange);
     }
 
+    .setpoint-value-line {
+      min-width: 0;
+
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+
+      white-space: nowrap;
+    }
+
     .setpoint-value {
-      margin: 10px 0 14px;
-      font-size: clamp(26px, 4vw, 42px);
+      color: white;
+
+      font-size: clamp(26px, 5.1vh, 44px);
       font-weight: 900;
+
+      line-height: 1;
+
       font-variant-numeric: tabular-nums;
+    }
+
+    .small-unit {
+      margin-left: 5px;
+
+      color: #a8c9ef;
+
+      font-size: clamp(12px, 2vh, 18px);
+      font-weight: 800;
     }
 
     .set-button {
       width: 100%;
-      min-height: 62px;
-      border: 0;
-      border-radius: 13px;
-      color: white;
-      font-size: 18px;
+      height: 100%;
+
+      border-radius: 9px;
+
+      font-size: clamp(13px, 1.6vw, 18px);
       font-weight: 900;
-      letter-spacing: 0.5px;
+
+      letter-spacing: 0.4px;
     }
 
-    .set-button.start {
+    .set-start-button {
       background:
-        linear-gradient(180deg, var(--green), var(--green-dark));
+        linear-gradient(
+          180deg,
+          var(--green),
+          var(--green-dark)
+        );
     }
 
-    .set-button.end {
+    .set-end-button {
       background:
-        linear-gradient(180deg, var(--orange), var(--orange-dark));
+        linear-gradient(
+          180deg,
+          var(--orange),
+          var(--orange-dark)
+        );
     }
 
-    .set-button:disabled {
-      opacity: 0.38;
-    }
+    /*
+      ==========================================================
+      RIGHT PANEL
+      ==========================================================
+    */
 
-    .jog-controls {
+    .control-panel {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+
+      grid-template-rows:
+        auto
+        minmax(82px, 1fr)
+        auto
+        minmax(82px, 0.92fr);
+
+      gap: 7px;
+    }
+
+    /*
+      ==========================================================
+      JOG CONTROLS
+      ==========================================================
+    */
+
+    .jog-grid {
+      min-width: 0;
+      min-height: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(90px, 0.72fr)
+        minmax(0, 1fr);
+
+      gap: 8px;
     }
 
     .jog-button {
-      width: 100%;
-      min-height: 86px;
-      border-radius: 16px;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+
+      padding: 6px;
+
       border: 1px solid #56a5ff;
+      border-radius: 12px;
+
       background:
-        linear-gradient(180deg, #338fff, #1459ac);
-      color: white;
-      font-size: 23px;
+        linear-gradient(
+          180deg,
+          #338fff,
+          #1459ac
+        );
+
+      font-size: clamp(15px, 2vw, 23px);
       font-weight: 900;
-      letter-spacing: 0.8px;
-      box-shadow: 0 6px 15px rgba(44, 136, 244, 0.22);
+
+      line-height: 1.15;
+      letter-spacing: 0.4px;
+
+      box-shadow:
+        0 5px 14px rgba(44, 136, 244, 0.22);
     }
 
-    .jog-button.stop {
-      min-height: 92px;
+    .stop-button {
       border-color: #ff7180;
+
       background:
-        linear-gradient(180deg, var(--red), var(--red-dark));
-      box-shadow: 0 6px 15px rgba(255, 77, 93, 0.25);
-      font-size: 28px;
+        linear-gradient(
+          180deg,
+          var(--red),
+          var(--red-dark)
+        );
+
+      font-size: clamp(18px, 2.25vw, 28px);
+
+      box-shadow:
+        0 5px 14px rgba(255, 77, 93, 0.24);
     }
 
     .jog-button.active {
-      outline: 4px solid rgba(255, 213, 74, 0.8);
-      transform: scale(0.985);
+      border-color: var(--yellow);
+
+      outline:
+        3px solid rgba(255, 213, 74, 0.83);
+
+      box-shadow:
+        0 0 16px rgba(255, 213, 74, 0.27);
     }
 
-    .jog-button:disabled {
-      opacity: 0.35;
-      box-shadow: none;
+    /*
+      ==========================================================
+      SPEED CONTROLS
+      ==========================================================
+    */
+
+    .speed-grid {
+      min-width: 0;
+      min-height: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(72px, 0.7fr)
+        minmax(130px, 1.5fr)
+        minmax(72px, 0.7fr);
+
+      grid-template-rows:
+        minmax(45px, 1fr)
+        clamp(37px, 6vh, 49px);
+
+      gap: 7px;
     }
+
+    .speed-button {
+      min-width: 0;
+      min-height: 0;
+
+      border: 1px solid #71869f;
+      border-radius: 11px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #3c5673,
+          #22364d
+        );
+
+      font-size: clamp(28px, 5.5vh, 46px);
+      font-weight: 900;
+
+      line-height: 1;
+    }
+
+    .speed-display {
+      min-width: 0;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 3px;
+
+      overflow: hidden;
+
+      background: var(--panel-light);
+
+      border: 1px solid var(--border);
+      border-radius: 11px;
+    }
+
+    .speed-value-line {
+      min-width: 0;
+
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+
+      white-space: nowrap;
+    }
+
+    .speed-value {
+      color: white;
+
+      font-size: clamp(29px, 5.5vh, 49px);
+      font-weight: 900;
+
+      line-height: 1;
+
+      font-variant-numeric: tabular-nums;
+    }
+
+    .speed-unit {
+      margin-left: 5px;
+
+      color: var(--muted);
+
+      font-size: clamp(12px, 2vh, 18px);
+      font-weight: 800;
+    }
+
+    .reset-button {
+      grid-column: 1 / 4;
+
+      width: 100%;
+      height: 100%;
+
+      border: 1px solid #8c9db0;
+      border-radius: 9px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #52677e,
+          #35495e
+        );
+
+      font-size: clamp(12px, 1.45vw, 16px);
+      font-weight: 900;
+
+      letter-spacing: 0.3px;
+    }
+
+    /*
+      ==========================================================
+      BUTTON FEEDBACK
+      ==========================================================
+    */
 
     .jog-button:active:not(:disabled),
     .set-button:active:not(:disabled),
     .speed-button:active:not(:disabled),
     .reset-button:active:not(:disabled) {
       transform: translateY(2px);
+      filter: brightness(1.12);
     }
 
-    .speed-panel {
-      margin-top: 16px;
-    }
-
-    .speed-display {
-      margin-bottom: 14px;
-      padding: 18px;
-      border-radius: 16px;
-      background: var(--panel-light);
-      border: 1px solid var(--border);
-      text-align: center;
-    }
-
-    .speed-value {
-      margin-top: 6px;
-      color: white;
-      font-size: 46px;
-      font-weight: 900;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .speed-unit {
-      margin-left: 5px;
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    .speed-controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .speed-button {
-      min-height: 68px;
-      border: 1px solid #71869f;
-      border-radius: 14px;
-      background:
-        linear-gradient(180deg, #344b66, #22364d);
-      color: white;
-      font-size: 29px;
-      font-weight: 900;
-    }
-
-    .speed-button:disabled {
-      opacity: 0.35;
-    }
-
-    .reset-button {
-      width: 100%;
-      min-height: 58px;
-      margin-top: 12px;
-      border: 1px solid #8c9db0;
-      border-radius: 14px;
-      background:
-        linear-gradient(180deg, #52677e, #35495e);
-      color: white;
-      font-size: 17px;
-      font-weight: 900;
-    }
-
-    .reset-button:disabled {
-      opacity: 0.35;
-    }
-
-    .message-box {
-      min-height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 16px;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: rgba(7, 17, 31, 0.58);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-      text-align: center;
-    }
+    /*
+      ==========================================================
+      FOOTER / STATUS BAR
+      ==========================================================
+    */
 
     .footer {
-      padding: 14px 6px 2px;
-      color: #667a91;
-      font-size: 12px;
+      min-width: 0;
+      min-height: 0;
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(150px, 0.75fr)
+        minmax(220px, 1.5fr)
+        minmax(170px, 0.75fr);
+
+      align-items: center;
+      gap: 10px;
+
+      padding: 4px 12px;
+
+      overflow: hidden;
+
+      background: rgba(16, 29, 46, 0.97);
+
+      border: 1px solid var(--border);
+      border-radius: 10px;
+
+      font-size: clamp(10px, 1.1vw, 13px);
+    }
+
+    .motor-status {
+      overflow: hidden;
+
+      color: #77aefc;
+
+      font-weight: 900;
+
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .motor-status.running {
+      color: var(--yellow);
+    }
+
+    .message {
+      overflow: hidden;
+
+      color: var(--muted);
+
+      font-weight: 700;
+
       text-align: center;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    @media (max-width: 850px) {
+    .owner {
+      overflow: hidden;
+
+      color: #6f859d;
+
+      font-weight: 700;
+
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /*
+      ==========================================================
+      SHORT LANDSCAPE SCREEN
+      Example: browser toolbar reduces viewport height
+      ==========================================================
+    */
+
+    @media (orientation: landscape) and (max-height: 600px) {
+      :root {
+        --header-height: 58px;
+        --footer-height: 34px;
+        --gap: 6px;
+      }
+
+      .app {
+        padding:
+          max(5px, env(safe-area-inset-top))
+          max(6px, env(safe-area-inset-right))
+          max(5px, env(safe-area-inset-bottom))
+          max(6px, env(safe-area-inset-left));
+      }
+
       .header {
-        grid-template-columns: 1fr;
-        text-align: center;
+        padding: 5px 10px;
       }
 
-      .version {
-        text-align: center;
+      .connect-button {
+        height: 39px;
       }
 
-      .connection-button {
-        width: 100%;
-      }
-
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 580px) {
-      .app-container {
-        padding: 10px;
-      }
-
-      .status-row {
-        grid-template-columns: 1fr;
-      }
-
-      .setpoint-grid {
-        grid-template-columns: 1fr;
+      .ble-status {
+        min-height: 38px;
       }
 
       .panel {
-        padding: 13px;
+        padding: 7px;
+      }
+
+      .position-panel {
+        gap: 6px;
+      }
+
+      .setpoint-grid {
+        gap: 6px;
+      }
+
+      .setpoint-card {
+        grid-template-rows:
+          auto
+          minmax(0, 1fr)
+          39px;
+
+        padding: 6px;
+      }
+
+      .control-panel {
+        grid-template-rows:
+          auto
+          minmax(70px, 1fr)
+          auto
+          minmax(69px, 0.9fr);
+
+        gap: 5px;
+      }
+
+      .jog-grid,
+      .speed-grid {
+        gap: 6px;
+      }
+
+      .current-position-value {
+        font-size: clamp(38px, 8.3vh, 58px);
+      }
+
+      .setpoint-value {
+        font-size: clamp(23px, 4.8vh, 35px);
+      }
+
+      .speed-value {
+        font-size: clamp(27px, 5.1vh, 39px);
+      }
+    }
+
+    /*
+      ==========================================================
+      PORTRAIT WARNING
+
+      This project is designed for landscape use. The HMI remains
+      accessible in portrait, but landscape is recommended.
+      ==========================================================
+    */
+
+    .rotate-notice {
+      display: none;
+    }
+
+    @media (orientation: portrait) {
+      .rotate-notice {
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 30px;
+
+        background: #07111f;
+        color: white;
+
+        text-align: center;
+      }
+
+      .rotate-icon {
+        margin-bottom: 18px;
+
+        font-size: 68px;
+      }
+
+      .rotate-title {
+        margin-bottom: 10px;
+
+        font-size: 27px;
+        font-weight: 900;
+      }
+
+      .rotate-text {
+        color: #98a9bd;
+
+        font-size: 16px;
+        line-height: 1.5;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="app-container">
 
-    <!-- =====================================================
+  <!-- Landscape orientation notice -->
+
+  <div class="rotate-notice">
+    <div class="rotate-icon">↻</div>
+
+    <div class="rotate-title">
+      Rotate Galaxy Tab
+    </div>
+
+    <div class="rotate-text">
+      Project Rebirth HMI is designed for Landscape mode.
+    </div>
+  </div>
+
+  <!-- Entire HMI -->
+
+  <div class="app">
+
+    <!-- ======================================================
          HEADER
-         ===================================================== -->
+         ====================================================== -->
 
     <header class="header">
-      <div class="header-left">
-        <h1 class="header-title">PROJECT REBIRTH</h1>
 
-        <div class="header-subtitle">
-          Stepper Motor BLE HMI
+      <div class="title-area">
+        <h1 class="main-title">
+          PROJECT REBIRTH
+        </h1>
+
+        <div class="subtitle">
+          Stepper Motor BLE HMI · v0.4 Setpoints
         </div>
+      </div>
+
+      <div
+        id="bleStatus"
+        class="ble-status"
+      >
+        BLE: DISCONNECTED
       </div>
 
       <button
         id="connectButton"
-        class="connection-button"
+        class="connect-button"
         type="button"
       >
         CONNECT
       </button>
 
-      <div class="version">
-        v0.4 Setpoints<br>
-        Jeong Hoon Kim
-      </div>
     </header>
 
-    <!-- =====================================================
-         BLE AND MOTOR STATUS
-         ===================================================== -->
+    <!-- ======================================================
+         MAIN
+         ====================================================== -->
 
-    <section class="status-row">
-      <div
-        id="bleStatus"
-        class="status-box"
-      >
-        BLE: DISCONNECTED
-      </div>
+    <main class="main">
 
-      <div
-        id="motorStatus"
-        class="status-box stopped"
-      >
-        MOTOR: STOPPED
-      </div>
-    </section>
+      <!-- ====================================================
+           LEFT: POSITION AND SETPOINTS
+           ==================================================== -->
 
-    <!-- =====================================================
-         MAIN CONTENT
-         ===================================================== -->
+      <section class="panel position-panel">
 
-    <main class="main-grid">
+        <!-- Current Position -->
 
-      <!-- ===================================================
-           POSITION PANEL
-           =================================================== -->
-
-      <section class="panel">
-        <h2 class="panel-title">Position</h2>
-
-        <div class="position-current">
+        <div class="current-position-card">
           <div class="position-label">
             Current Position
           </div>
 
-          <div>
+          <div class="current-position-line">
             <span
               id="currentPosition"
-              class="position-value"
+              class="current-position-value"
             >
               0.00
             </span>
 
-            <span class="position-unit">mm</span>
+            <span class="large-unit">
+              mm
+            </span>
           </div>
         </div>
 
+        <!-- Start and End Position -->
+
         <div class="setpoint-grid">
 
-          <!-- START POSITION -->
+          <!-- Start Position -->
 
-          <div class="setpoint-card start">
+          <div class="setpoint-card start-card">
+
             <div class="position-label">
               Start Position
             </div>
 
-            <div class="setpoint-value">
-              <span id="startPosition">0.00</span>
-              <span class="position-unit">mm</span>
+            <div class="setpoint-value-line">
+              <span
+                id="startPosition"
+                class="setpoint-value"
+              >
+                0.00
+              </span>
+
+              <span class="small-unit">
+                mm
+              </span>
             </div>
 
             <button
               id="setStartButton"
-              class="set-button start motor-control"
+              class="
+                set-button
+                set-start-button
+                motor-control
+              "
               type="button"
               disabled
             >
               SET START
             </button>
+
           </div>
 
-          <!-- END POSITION -->
+          <!-- End Position -->
 
-          <div class="setpoint-card end">
+          <div class="setpoint-card end-card">
+
             <div class="position-label">
               End Position
             </div>
 
-            <div class="setpoint-value">
-              <span id="endPosition">0.00</span>
-              <span class="position-unit">mm</span>
+            <div class="setpoint-value-line">
+              <span
+                id="endPosition"
+                class="setpoint-value"
+              >
+                0.00
+              </span>
+
+              <span class="small-unit">
+                mm
+              </span>
             </div>
 
             <button
               id="setEndButton"
-              class="set-button end motor-control"
+              class="
+                set-button
+                set-end-button
+                motor-control
+              "
               type="button"
               disabled
             >
               SET END
             </button>
+
           </div>
 
         </div>
       </section>
 
-      <!-- ===================================================
-           JOG PANEL
-           =================================================== -->
+      <!-- ====================================================
+           RIGHT: JOG AND SPEED
+           ==================================================== -->
 
-      <section class="panel">
-        <h2 class="panel-title">Manual Jog</h2>
+      <section class="panel control-panel">
 
-        <div class="jog-controls">
-          <button
-            id="jogForwardButton"
-            class="jog-button motor-control"
-            type="button"
-            disabled
-          >
-            JOG FWD ▶
-          </button>
+        <h2 class="section-title">
+          Manual Jog
+        </h2>
 
-          <button
-            id="stopButton"
-            class="jog-button stop motor-control"
-            type="button"
-            disabled
-          >
-            STOP
-          </button>
+        <!-- Jog controls -->
+
+        <div class="jog-grid">
 
           <button
             id="jogReverseButton"
@@ -621,19 +1135,55 @@
           >
             ◀ JOG REV
           </button>
+
+          <button
+            id="stopButton"
+            class="
+              jog-button
+              stop-button
+              motor-control
+            "
+            type="button"
+            disabled
+          >
+            STOP
+          </button>
+
+          <button
+            id="jogForwardButton"
+            class="jog-button motor-control"
+            type="button"
+            disabled
+          >
+            JOG FWD ▶
+          </button>
+
         </div>
 
-        <!-- SPEED -->
+        <h2 class="section-title">
+          Set Speed
+        </h2>
 
-        <div class="speed-panel">
-          <h2 class="panel-title">Set Speed</h2>
+        <!-- Speed controls -->
+
+        <div class="speed-grid">
+
+          <button
+            id="speedDownButton"
+            class="speed-button motor-control"
+            type="button"
+            disabled
+          >
+            −
+          </button>
 
           <div class="speed-display">
+
             <div class="position-label">
               Command Speed
             </div>
 
-            <div>
+            <div class="speed-value-line">
               <span
                 id="speedValue"
                 class="speed-value"
@@ -641,29 +1191,21 @@
                 10
               </span>
 
-              <span class="speed-unit">mm/s</span>
+              <span class="speed-unit">
+                mm/s
+              </span>
             </div>
+
           </div>
 
-          <div class="speed-controls">
-            <button
-              id="speedDownButton"
-              class="speed-button motor-control"
-              type="button"
-              disabled
-            >
-              −
-            </button>
-
-            <button
-              id="speedUpButton"
-              class="speed-button motor-control"
-              type="button"
-              disabled
-            >
-              +
-            </button>
-          </div>
+          <button
+            id="speedUpButton"
+            class="speed-button motor-control"
+            type="button"
+            disabled
+          >
+            +
+          </button>
 
           <button
             id="resetSpeedButton"
@@ -673,29 +1215,46 @@
           >
             RESET SPEED TO 10 mm/s
           </button>
+
         </div>
       </section>
-
     </main>
 
-    <div
-      id="messageBox"
-      class="message-box"
-    >
-      Press CONNECT to connect to Project Rebirth.
-    </div>
+    <!-- ======================================================
+         FOOTER / STATUS BAR
+         ====================================================== -->
 
     <footer class="footer">
-      Project Rebirth · Jeong Hoon Kim
+
+      <div
+        id="motorStatus"
+        class="motor-status"
+      >
+        MOTOR: STOPPED
+      </div>
+
+      <div
+        id="messageBox"
+        class="message"
+      >
+        Press CONNECT to connect.
+      </div>
+
+      <div class="owner">
+        Jeong Hoon Kim
+      </div>
+
     </footer>
   </div>
 
   <script>
     "use strict";
 
-    // ========================================================
-    // BLE UUID DEFINITIONS
-    // ========================================================
+    /*
+      ==========================================================
+      PROJECT REBIRTH BLE UUIDs
+      ==========================================================
+    */
 
     const SERVICE_UUID =
       "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
@@ -706,27 +1265,39 @@
     const TX_CHARACTERISTIC_UUID =
       "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-    // ========================================================
-    // BLE OBJECTS
-    // ========================================================
+    /*
+      ==========================================================
+      BLE OBJECTS
+      ==========================================================
+    */
 
     let bluetoothDevice = null;
     let bleServer = null;
+
     let rxCharacteristic = null;
     let txCharacteristic = null;
 
     let isConnected = false;
     let motorState = "STOP";
 
-    // Prevent simultaneous writes to the BLE characteristic.
+    /*
+      Every BLE write is executed sequentially.
+
+      This is important when SET START or SET END sends:
+      1. STOP
+      2. SET_START or SET_END
+    */
+
     let writeQueue = Promise.resolve();
 
     const textEncoder = new TextEncoder();
     const textDecoder = new TextDecoder();
 
-    // ========================================================
-    // HTML ELEMENTS
-    // ========================================================
+    /*
+      ==========================================================
+      HTML ELEMENTS
+      ==========================================================
+    */
 
     const connectButton =
       document.getElementById("connectButton");
@@ -736,6 +1307,9 @@
 
     const motorStatus =
       document.getElementById("motorStatus");
+
+    const messageBox =
+      document.getElementById("messageBox");
 
     const currentPosition =
       document.getElementById("currentPosition");
@@ -773,15 +1347,14 @@
     const resetSpeedButton =
       document.getElementById("resetSpeedButton");
 
-    const messageBox =
-      document.getElementById("messageBox");
-
     const motorControlButtons =
       document.querySelectorAll(".motor-control");
 
-    // ========================================================
-    // SCREEN UPDATE FUNCTIONS
-    // ========================================================
+    /*
+      ==========================================================
+      DISPLAY FUNCTIONS
+      ==========================================================
+    */
 
     function setMessage(message) {
       messageBox.textContent = message;
@@ -819,55 +1392,69 @@
     }
 
     function updateMotorDisplay(state) {
-      motorState = state;
+      const normalizedState =
+        String(state).trim().toUpperCase();
+
+      motorState = normalizedState;
 
       jogForwardButton.classList.remove("active");
       jogReverseButton.classList.remove("active");
       stopButton.classList.remove("active");
 
-      motorStatus.classList.remove(
-        "running",
-        "stopped"
-      );
+      motorStatus.classList.remove("running");
 
-      if (state === "FWD") {
-        motorStatus.textContent = "MOTOR: JOG FORWARD";
+      if (normalizedState === "FWD") {
+        motorStatus.textContent =
+          "MOTOR: JOG FORWARD";
+
         motorStatus.classList.add("running");
         jogForwardButton.classList.add("active");
       }
-      else if (state === "REV") {
-        motorStatus.textContent = "MOTOR: JOG REVERSE";
+      else if (normalizedState === "REV") {
+        motorStatus.textContent =
+          "MOTOR: JOG REVERSE";
+
         motorStatus.classList.add("running");
         jogReverseButton.classList.add("active");
       }
       else {
-        motorStatus.textContent = "MOTOR: STOPPED";
-        motorStatus.classList.add("stopped");
+        motorState = "STOP";
+
+        motorStatus.textContent =
+          "MOTOR: STOPPED";
+
         stopButton.classList.add("active");
       }
     }
 
-    // ========================================================
-    // CONNECT OR DISCONNECT BUTTON
-    // ========================================================
+    /*
+      ==========================================================
+      CONNECT / DISCONNECT BUTTON
+      ==========================================================
+    */
 
-    connectButton.addEventListener("click", async () => {
-      if (isConnected) {
-        await disconnectBLE();
+    connectButton.addEventListener(
+      "click",
+      async () => {
+        if (isConnected) {
+          await disconnectBLE();
+        }
+        else {
+          await connectBLE();
+        }
       }
-      else {
-        await connectBLE();
-      }
-    });
+    );
 
-    // ========================================================
-    // BLE CONNECTION
-    // ========================================================
+    /*
+      ==========================================================
+      BLE CONNECTION
+      ==========================================================
+    */
 
     async function connectBLE() {
       if (!navigator.bluetooth) {
         setMessage(
-          "Web Bluetooth is not supported in this browser."
+          "Web Bluetooth is not supported."
         );
 
         return;
@@ -877,11 +1464,19 @@
         connectButton.disabled = true;
         connectButton.textContent = "CONNECTING...";
 
-        bleStatus.textContent = "BLE: CONNECTING...";
+        bleStatus.textContent =
+          "BLE: CONNECTING...";
 
         setMessage(
-          "Select Project Rebirth from the Bluetooth window."
+          "Select Project Rebirth."
         );
+
+        /*
+          Filter using the service UUID.
+
+          This limits the Bluetooth selection window to devices
+          advertising the Project Rebirth BLE service.
+        */
 
         bluetoothDevice =
           await navigator.bluetooth.requestDevice({
@@ -901,7 +1496,9 @@
           handleUnexpectedDisconnect
         );
 
-        setMessage("Connecting to BLE GATT server...");
+        setMessage(
+          "Connecting to ESP32..."
+        );
 
         bleServer =
           await bluetoothDevice.gatt.connect();
@@ -931,25 +1528,33 @@
         updateConnectionDisplay(true);
 
         setMessage(
-          "Connected to Project Rebirth."
+          "Project Rebirth connected."
         );
 
-        // Ask the ESP32 for the current position.
+        /*
+          Request ESP32's complete position information.
+        */
+
         await sendCommand("POS");
       }
       catch (error) {
-        console.error("BLE connection error:", error);
+        console.error(
+          "BLE connection error:",
+          error
+        );
 
+        clearBLEObjects();
         updateConnectionDisplay(false);
 
         if (error.name === "NotFoundError") {
           setMessage(
-            "Connection cancelled or Project Rebirth was not selected."
+            "Connection cancelled."
           );
         }
         else {
           setMessage(
-            "BLE connection failed: " + error.message
+            "Connection failed: " +
+            error.message
           );
         }
       }
@@ -957,14 +1562,17 @@
         connectButton.disabled = false;
 
         if (!isConnected) {
-          connectButton.textContent = "CONNECT";
+          connectButton.textContent =
+            "CONNECT";
         }
       }
     }
 
-    // ========================================================
-    // MANUAL DISCONNECT
-    // ========================================================
+    /*
+      ==========================================================
+      MANUAL BLE DISCONNECT
+      ==========================================================
+    */
 
     async function disconnectBLE() {
       try {
@@ -974,7 +1582,7 @@
       }
       catch (error) {
         console.warn(
-          "STOP command before disconnect failed:",
+          "STOP before disconnect failed:",
           error
         );
       }
@@ -990,19 +1598,23 @@
       clearBLEObjects();
       updateConnectionDisplay(false);
 
-      setMessage("BLE disconnected.");
+      setMessage(
+        "BLE disconnected."
+      );
     }
 
-    // ========================================================
-    // UNEXPECTED DISCONNECT
-    // ========================================================
+    /*
+      ==========================================================
+      UNEXPECTED BLE DISCONNECT
+      ==========================================================
+    */
 
     function handleUnexpectedDisconnect() {
       clearBLEObjects();
       updateConnectionDisplay(false);
 
       setMessage(
-        "BLE connection lost. Motor stop was applied by ESP32."
+        "BLE connection lost. Motor stopped."
       );
     }
 
@@ -1010,17 +1622,22 @@
       rxCharacteristic = null;
       txCharacteristic = null;
       bleServer = null;
+
       writeQueue = Promise.resolve();
     }
 
-    // ========================================================
-    // BLE COMMAND TRANSMISSION
-    // ========================================================
+    /*
+      ==========================================================
+      BLE COMMAND TRANSMISSION
+      ==========================================================
+    */
 
     function sendCommand(command) {
       writeQueue = writeQueue
         .catch(() => {
-          // Keep the queue usable after an earlier failed write.
+          /*
+            Keep the queue usable after a failed command.
+          */
         })
         .then(async () => {
           if (
@@ -1036,6 +1653,10 @@
 
           const commandData =
             textEncoder.encode(command);
+
+          /*
+            Prefer the non-response write method when available.
+          */
 
           if (
             typeof rxCharacteristic
@@ -1066,9 +1687,11 @@
       return writeQueue;
     }
 
-    // ========================================================
-    // BLE MESSAGE RECEPTION
-    // ========================================================
+    /*
+      ==========================================================
+      BLE MESSAGE RECEPTION
+      ==========================================================
+    */
 
     function handleBLEMessage(event) {
       const value = event.target.value;
@@ -1081,24 +1704,43 @@
         return;
       }
 
-      console.log("ESP32:", message);
+      console.log(
+        "ESP32:",
+        message
+      );
 
       const parts = message.split(",");
-      const messageType = parts[0];
 
-      // ------------------------------------------------------
-      // Position message:
-      // POS,current,start,end,speed
-      // ------------------------------------------------------
+      const messageType =
+        String(parts[0]).trim().toUpperCase();
+
+      /*
+        --------------------------------------------------------
+        POSITION MESSAGE
+
+        ESP32 format:
+        POS,current,start,end,targetSpeed
+
+        Example:
+        POS,25.30,25.30,175.80,10
+        --------------------------------------------------------
+      */
 
       if (
         messageType === "POS" &&
         parts.length >= 5
       ) {
-        const current = Number(parts[1]);
-        const start = Number(parts[2]);
-        const end = Number(parts[3]);
-        const speed = Number(parts[4]);
+        const current =
+          Number(parts[1]);
+
+        const start =
+          Number(parts[2]);
+
+        const end =
+          Number(parts[3]);
+
+        const speed =
+          Number(parts[4]);
 
         if (Number.isFinite(current)) {
           currentPosition.textContent =
@@ -1121,16 +1763,21 @@
         }
       }
 
-      // ------------------------------------------------------
-      // Speed message:
-      // SPEED,10
-      // ------------------------------------------------------
+      /*
+        --------------------------------------------------------
+        SPEED MESSAGE
+
+        ESP32 format:
+        SPEED,10
+        --------------------------------------------------------
+      */
 
       else if (
         messageType === "SPEED" &&
         parts.length >= 2
       ) {
-        const speed = Number(parts[1]);
+        const speed =
+          Number(parts[1]);
 
         if (Number.isFinite(speed)) {
           speedValue.textContent =
@@ -1138,12 +1785,15 @@
         }
       }
 
-      // ------------------------------------------------------
-      // Motor state:
-      // STATE,FWD
-      // STATE,REV
-      // STATE,STOP
-      // ------------------------------------------------------
+      /*
+        --------------------------------------------------------
+        MOTOR STATE MESSAGE
+
+        STATE,FWD
+        STATE,REV
+        STATE,STOP
+        --------------------------------------------------------
+      */
 
       else if (
         messageType === "STATE" &&
@@ -1152,31 +1802,40 @@
         updateMotorDisplay(parts[1]);
       }
 
-      // ------------------------------------------------------
-      // User message
-      // ------------------------------------------------------
+      /*
+        --------------------------------------------------------
+        INFORMATION MESSAGE
+        --------------------------------------------------------
+      */
 
       else if (
         messageType === "MESSAGE" &&
         parts.length >= 2
       ) {
-        setMessage(parts.slice(1).join(","));
+        setMessage(
+          parts.slice(1).join(",")
+        );
       }
 
-      // ------------------------------------------------------
-      // Error message
-      // ------------------------------------------------------
+      /*
+        --------------------------------------------------------
+        ERROR MESSAGE
+        --------------------------------------------------------
+      */
 
       else if (messageType === "ERROR") {
         setMessage(
-          "ESP32 error: " + parts.slice(1).join(",")
+          "ESP32 error: " +
+          parts.slice(1).join(",")
         );
       }
     }
 
-    // ========================================================
-    // JOG BUTTON EVENTS
-    // ========================================================
+    /*
+      ==========================================================
+      JOG COMMANDS
+      ==========================================================
+    */
 
     jogForwardButton.addEventListener(
       "click",
@@ -1185,7 +1844,7 @@
           await sendCommand("JOG_FWD");
 
           setMessage(
-            "Jog Forward command sent."
+            "Jog Forward."
           );
         }
         catch (error) {
@@ -1201,7 +1860,7 @@
           await sendCommand("JOG_REV");
 
           setMessage(
-            "Jog Reverse command sent."
+            "Jog Reverse."
           );
         }
         catch (error) {
@@ -1216,7 +1875,9 @@
         try {
           await sendCommand("STOP");
 
-          setMessage("Stop command sent.");
+          setMessage(
+            "Motor stopped."
+          );
         }
         catch (error) {
           console.error(error);
@@ -1224,20 +1885,25 @@
       }
     );
 
-    // ========================================================
-    // SETPOINT BUTTON EVENTS
-    // ========================================================
+    /*
+      ==========================================================
+      SETPOINT COMMANDS
+      ==========================================================
+    */
 
     setStartButton.addEventListener(
       "click",
       async () => {
         try {
-          // Stop before recording the setpoint.
+          /*
+            Stop first, then save the settled position.
+          */
+
           await sendCommand("STOP");
           await sendCommand("SET_START");
 
           setMessage(
-            "Current position saved as Start Position."
+            "Current position saved as START."
           );
         }
         catch (error) {
@@ -1250,12 +1916,15 @@
       "click",
       async () => {
         try {
-          // Stop before recording the setpoint.
+          /*
+            Stop first, then save the settled position.
+          */
+
           await sendCommand("STOP");
           await sendCommand("SET_END");
 
           setMessage(
-            "Current position saved as End Position."
+            "Current position saved as END."
           );
         }
         catch (error) {
@@ -1264,9 +1933,11 @@
       }
     );
 
-    // ========================================================
-    // SPEED BUTTON EVENTS
-    // ========================================================
+    /*
+      ==========================================================
+      SPEED COMMANDS
+      ==========================================================
+    */
 
     speedUpButton.addEventListener(
       "click",
@@ -1275,7 +1946,7 @@
           await sendCommand("SPEED_UP");
 
           setMessage(
-            "Speed increased by 5 mm/s."
+            "Speed increased."
           );
         }
         catch (error) {
@@ -1291,7 +1962,7 @@
           await sendCommand("SPEED_DOWN");
 
           setMessage(
-            "Speed decreased by 5 mm/s."
+            "Speed decreased."
           );
         }
         catch (error) {
@@ -1316,35 +1987,50 @@
       }
     );
 
-    // ========================================================
-    // SAFETY ACTIONS
-    // ========================================================
-
     /*
-      If the page is hidden or the Galaxy Tab changes tabs,
-      attempt to send STOP.
-
-      BLE browser operations during page shutdown are not always
-      guaranteed, so the ESP32 also stops the motor whenever the
-      BLE connection is lost.
+      ==========================================================
+      SAFETY EVENTS
+      ==========================================================
     */
 
     document.addEventListener(
       "visibilitychange",
       () => {
+        /*
+          If the HMI is hidden while the motor is moving,
+          attempt to send STOP.
+
+          The ESP32 also stops when BLE disconnects.
+        */
+
         if (
           document.hidden &&
           isConnected &&
           motorState !== "STOP"
         ) {
-          sendCommand("STOP").catch(() => {});
+          sendCommand("STOP")
+            .catch(() => {});
         }
       }
     );
 
-    // ========================================================
-    // INITIAL SCREEN
-    // ========================================================
+    /*
+      Prevent the browser's context menu from opening after
+      a long press on an HMI button.
+    */
+
+    document.addEventListener(
+      "contextmenu",
+      (event) => {
+        event.preventDefault();
+      }
+    );
+
+    /*
+      ==========================================================
+      INITIAL SCREEN
+      ==========================================================
+    */
 
     updateConnectionDisplay(false);
     updateMotorDisplay("STOP");
