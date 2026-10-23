@@ -98,7 +98,6 @@ button {
 </style>
 </head>
 
-
 <body>
 
 <div class="container">
@@ -109,22 +108,12 @@ button {
 Jeong Hoon Kim (김정훈)
 </div>
 
-
-<!-- ===================================
-     BLE CONNECT
-     =================================== -->
-
 <button class="connect"
-        onclick="document.getElementById('status').innerHTML='BUTTON WORKS';">
+        onclick="connectBLE()">
 CONNECT
 </button>
 
 <br><br>
-
-
-<!-- ===================================
-     JOG CONTROL
-     =================================== -->
 
 <button class="jog"
         onclick="sendCommand('R')">
@@ -142,11 +131,6 @@ JOG FWD
         onclick="sendCommand('S')">
 STOP
 </button>
-
-
-<!-- ===================================
-     SPEED CONTROL
-     =================================== -->
 
 <div class="speedTitle">
 JOG SPEED
@@ -170,11 +154,6 @@ JOG SPEED
 </button>
 
 </div>
-
-
-<!-- ===================================
-     BLE STATUS
-     =================================== -->
 
 <div id="status"
      class="status">
@@ -231,4 +210,133 @@ async function connectBLE()
             await navigator.bluetooth.requestDevice(
             {
                 filters:
-                
+                [
+                    {
+                        name: "Project_Rebirth"
+                    }
+                ],
+
+                optionalServices:
+                [
+                    SERVICE_UUID
+                ]
+            });
+
+        const server =
+            await bluetoothDevice.gatt.connect();
+
+        const service =
+            await server.getPrimaryService(
+                SERVICE_UUID
+            );
+
+        characteristic =
+            await service.getCharacteristic(
+                CHARACTERISTIC_UUID
+            );
+
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTED";
+
+        document.getElementById("status")
+                .classList.add("connected");
+
+        await sendCommand("V" + speed);
+    }
+
+    catch(error)
+    {
+        console.log(error);
+
+        document.getElementById("status").innerHTML =
+            "BLE: CONNECTION FAILED";
+
+        document.getElementById("status")
+                .classList.remove("connected");
+    }
+}
+
+
+// ========================================
+// SEND BLE COMMAND
+// ========================================
+
+async function sendCommand(command)
+{
+    if (!characteristic)
+    {
+        alert("BLE is not connected.");
+        return;
+    }
+
+    try
+    {
+        const encoder =
+            new TextEncoder();
+
+        await characteristic.writeValue(
+            encoder.encode(command)
+        );
+
+        console.log("Sent:", command);
+    }
+
+    catch(error)
+    {
+        console.log(error);
+    }
+}
+
+
+// ========================================
+// SPEED +
+// ========================================
+
+async function increaseSpeed()
+{
+    if (speed < MAX_SPEED)
+    {
+        speed += SPEED_STEP;
+
+        updateSpeedDisplay();
+
+        await sendCommand(
+            "V" + speed
+        );
+    }
+}
+
+
+// ========================================
+// SPEED -
+// ========================================
+
+async function decreaseSpeed()
+{
+    if (speed > MIN_SPEED)
+    {
+        speed -= SPEED_STEP;
+
+        updateSpeedDisplay();
+
+        await sendCommand(
+            "V" + speed
+        );
+    }
+}
+
+
+// ========================================
+// UPDATE SPEED DISPLAY
+// ========================================
+
+function updateSpeedDisplay()
+{
+    document.getElementById("speed").innerHTML =
+        speed + " mm/s";
+}
+
+</script>
+
+</body>
+</html>
