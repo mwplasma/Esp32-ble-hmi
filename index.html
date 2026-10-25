@@ -1,166 +1,46 @@
-/* ====================================================
-   Project Rebirth
-   MAIN Layout v1
-
-   Readout block moved to upper-right
-   No BLE / motor logic changes
-   ==================================================== */
-
-.mainTop{
-    position:relative;
-
-    display:grid;
-
-    grid-template-columns:
-        minmax(560px,44%)
-        minmax(0,56%);
-
-    gap:10px;
-
-    min-height:0;
-}
-
-
-.left{
-    height:100%;
-    align-self:stretch;
-}
-
-
-/* ====================================================
-   POSITION / SPEED / REPEAT STATUS
-   Upper-right area
-   ==================================================== */
-
-.readouts{
-
-    position:absolute;
-
-    top:10px;
-    right:20px;
-
-    width:min(
-        510px,
-        31vw
-    );
-
-    display:grid;
-
-    grid-template-columns:1fr;
-
-    gap:6px;
-
-    align-content:start;
-
-    z-index:3;
-}
-
-
-.readouts .row{
-
-    grid-template-columns:
-        120px
-        190px
-        66px;
-
-    justify-content:end;
-
-    gap:8px;
-
-    font-size:17px;
-
-}
-
-
-.readouts .val{
-
-    font-size:25px;
-
-    padding:
-        5px
-        10px;
-
-}
-
-
-/* ====================================================
-   S1 / S2
-   Directly underneath status values
-   ==================================================== */
-
-.sensorPanel{
-
-    grid-template-columns:
-        1fr
-        1fr;
-
-    gap:7px;
-
-    margin-top:3px;
-
-}
-
-
-.sensorCard{
-
-    min-height:40px;
-
-}
-
-
-/* ====================================================
-   Galaxy Tab + Chrome toolbar
-   ==================================================== */
-
-@media
-(orientation:landscape)
-and
-(max-height:650px){
-
-    .readouts{
-
-        top:5px;
-        right:12px;
-
-        width:min(
-            470px,
-            31vw
-        );
-
-        gap:4px;
-
-    }
-
-
-    .readouts .row{
-
-        grid-template-columns:
-            105px
-            160px
-            56px;
-
-        font-size:14px;
-
-        gap:6px;
-
-    }
-
-
-    .readouts .val{
-
-        font-size:21px;
-
-        padding:
-            3px
-            8px;
-
-    }
-
-
-    .sensorCard{
-
-        min-height:31px;
-
-    }
-
-}
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#04384d">
+<title>Project Rebirth HMI</title>
+<style>
+@page{size:1600px 1000px;margin:0}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#e9eef1;font-family:Arial,"Noto Sans KR",sans-serif;user-select:none}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#hmi{position:absolute;left:50%;top:50%;width:1600px;height:1000px;transform-origin:center center;background:radial-gradient(circle at 57% 42%,#147489 0,#075168 48%,#04364b 100%);color:#fff;border:2px solid #87b8c7;border-radius:26px;padding:25px 32px 18px;display:grid;grid-template-rows:100px 470px 42px 120px 135px 55px;row-gap:10px;overflow:hidden}
+button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.disabled{filter:saturate(.65);opacity:.58}.blocked{filter:grayscale(1)!important;opacity:.34!important}
+.header{display:grid;grid-template-columns:1fr 240px 240px 175px;gap:22px;align-items:center;border-bottom:2px solid #83aebb}.title{font-size:43px;font-weight:900;letter-spacing:1.2px;white-space:nowrap;line-height:1}.subtitle{font-size:20px;margin-top:13px}.lamp{height:60px;border:2px solid #16abe8;border-radius:10px;background:#03293d;display:flex;align-items:center;justify-content:center;gap:14px;font-size:16px;font-weight:900}.lampDot{width:28px;height:28px;border-radius:50%;background:#465a62}.lamp.on .lampDot{background:#08f148;box-shadow:0 0 14px #08f148}.clock{text-align:right;font-size:14px;font-weight:900;line-height:1.45}
+.upper{display:grid;grid-template-columns:650px 415px 445px;grid-template-rows:385px 70px;column-gap:13px;row-gap:10px;min-height:0}.controls{grid-column:1;grid-row:1/3;display:grid;grid-template-columns:378px 258px;grid-template-rows:365px 95px;gap:12px;padding-right:12px;border-right:2px solid #7faab7}.jog{border:2px solid #59f0f1;border-radius:16px;background:linear-gradient(145deg,#0b747a,#075062);box-shadow:inset 0 0 25px #069ca4;display:grid;grid-template-rows:76px 1fr;padding:10px}.jogTitle{text-align:center;font-size:52px;font-weight:900}.jogBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px}.jogBtn{background:transparent;color:#fff;font-size:22px}.tri{display:block;width:0;height:0;margin:0 auto 18px;border-left:58px solid transparent;border-right:58px solid transparent;border-bottom:105px solid #08a9ff;filter:drop-shadow(0 5px 5px #003d5d)}.rev .tri{border-bottom:0;border-top:105px solid #ffd12d;filter:drop-shadow(0 5px 5px #755000)}.setStack{display:grid;grid-template-rows:1fr 1fr;gap:12px}.setBtn{border-radius:12px;background:linear-gradient(#19b7ff,#0876d8);color:#fff;font-size:30px;box-shadow:0 6px 10px #002b3b}.setBtn small{display:block;font-size:17px;margin-top:7px}.home{grid-column:1/3;border-radius:12px;background:linear-gradient(#ffd236,#fff2b7 70%,#dcc66f);color:#07346b;font-size:36px;box-shadow:0 6px 10px #002b3b}.home small{display:block;font-size:18px;margin-top:2px}
+.stats{display:grid;grid-template-rows:repeat(3,105px);gap:18px;align-content:start;padding:14px 7px 0}.centerStats{grid-column:2;grid-row:1}.rightStats{grid-column:3;grid-row:1}.stat{display:grid;grid-template-columns:150px 180px 70px;gap:8px;align-items:center;font-size:21px;font-weight:900}.rightStats .stat{grid-template-columns:145px 190px 70px}.label small{display:block;font-size:12px;font-weight:500;margin-top:6px;white-space:nowrap}.value{height:74px;border:2px solid #86b6c4;border-radius:10px;background:#031f2f;color:#25ebff;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;font-size:41px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}.unit{white-space:nowrap}
+.sensors{grid-column:2/4;grid-row:2;width:620px;justify-self:center;align-self:center;display:grid;grid-template-columns:1fr 1fr;gap:18px}.sensor{height:60px;border:1px solid #20bd79;border-radius:10px;background:#06483f;color:#a5ffd7;display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:7px 14px;font-size:16px}.sensorDot{width:24px;height:24px;border-radius:50%;background:#16ee7b;box-shadow:0 0 12px #16ee7b}.sensor small{display:block;font-size:10px;font-weight:500}.sensor strong{font-size:17px}.sensor.limit{background:#4a1922;border-color:#ff5062;color:#ffb8c0}.sensor.limit .sensorDot{background:#ff3045;box-shadow:0 0 12px #ff3045}
+.modeLabel{display:flex;align-items:end;border-bottom:2px solid #82aeba;font-size:24px;font-weight:900}.modes,.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.mode,.action{border-radius:12px;box-shadow:0 6px 10px #002b3b}.mode{background:linear-gradient(#17b9ff,#0875d7);color:#fff;font-size:31px}.mode.active{background:linear-gradient(#46df34,#18b719)}.mode small{display:block;font-size:16px;margin-top:5px}.action{background:linear-gradient(#ffd235,#fff2b6 69%,#d9c36d);color:#09356d;font-size:26px}.action .icon{font-size:42px;margin-right:15px}.run .icon{color:#079d3a}.pause .icon{color:#ff6512}.stop .icon{color:#e6081c}.config{background:#063a54;color:#fff;border:2px solid #17ade8}.footer{position:relative;border-top:1px solid #558899;display:flex;align-items:center;justify-content:space-between;font-size:12px}.connect{position:absolute;left:50%;transform:translateX(-50%);border:1px solid #42c8ff;border-radius:18px;background:linear-gradient(#18b2ff,#0874cb);color:#fff;font-size:14px;padding:8px 58px}
+@media print{#hmi{transform:translate(-50%,-50%) scale(1)!important}}
+@media(orientation:portrait){#hmi{display:none}#viewport:after{content:'Galaxy Tab을 가로로 돌려주세요.';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#04364b;color:#fff;font-size:28px;font-weight:900}}
+</style>
+</head>
+<body>
+<div id="viewport"><main id="hmi">
+<header class="header"><div><div class="title">STEPPER MOTOR CONTROL SYSTEM</div><div class="subtitle">Project Rebirth　|　ESP32 BLE HMI</div></div><div id="bleLamp" class="lamp"><span class="lampDot"></span><span id="bleText">BLE DISCONNECTED</span></div><div id="readyLamp" class="lamp"><span class="lampDot"></span>MOTOR READY</div><div class="clock"><div id="clock">2026. 10. 25. 15:00</div><div>v1.0</div></div></header>
+<section class="upper">
+<div class="controls"><div class="jog"><div class="jogTitle">JOG</div><div class="jogBtns"><button id="fwd" class="jogBtn disabled"><span class="tri"></span>FWD (+)</button><button id="rev" class="jogBtn rev disabled"><span class="tri"></span>REV (-)</button></div></div><div class="setStack"><button id="setStart" class="setBtn disabled">Set Start<small>시작위치 설정</small></button><button id="setEnd" class="setBtn disabled">Set End<small>종점위치 설정</small></button></div><button id="home" class="home disabled">Home<small>원점 복귀</small></button></div>
+<div class="stats centerStats"><div class="stat"><span class="label">설정속도<small>운전 속도</small></span><span id="speed" class="value">10.00</span><span class="unit">mm/s</span></div><div class="stat"><span class="label">반복횟수<small>시작 ↔ 종점 이동 횟수</small></span><span id="repeat" class="value">10</span><span class="unit">회</span></div><div class="stat"><span class="label">현재횟수<small>현재 진행 횟수</small></span><span id="count" class="value">0 / 10</span><span class="unit">회</span></div></div>
+<div class="stats rightStats"><div class="stat"><span class="label">시작위치</span><span id="start" class="value">0.00</span><span class="unit">mm</span></div><div class="stat"><span class="label">종점위치</span><span id="end" class="value">0.00</span><span class="unit">mm</span></div><div class="stat"><span class="label">현재위치</span><span id="current" class="value">0.00</span><span class="unit">mm</span></div></div>
+<div class="sensors"><div id="s1Card" class="sensor"><span class="sensorDot"></span><span><b>S1</b><small>MOTOR SIDE</small></span><strong id="s1State">CLEAR</strong></div><div id="s2Card" class="sensor"><span class="sensorDot"></span><span><b>S2</b><small>OPPOSITE SIDE</small></span><strong id="s2State">CLEAR</strong></div></div>
+</section>
+<div class="modeLabel">운전모드</div>
+<section class="modes"><button class="mode active" data-mode="SE">SE<small>시작 → 종점</small></button><button class="mode" data-mode="ONE">1회<small>한 번 이동</small></button><button class="mode" data-mode="N">N회<small>지정 횟수 반복</small></button><button class="mode" data-mode="CONT">연속<small>무한 반복</small></button></section>
+<section class="actions"><button id="run" class="action run disabled"><span class="icon">▶</span>실행　RUN</button><button id="pause" class="action pause disabled"><span class="icon">Ⅱ</span>일시정지　PAUSE</button><button id="stop" class="action stop disabled"><span class="icon">■</span>정지　STOP</button><button id="config" class="action config">⚙　CONFIG</button></section>
+<footer class="footer"><span>Jeong Hoon Kim (김정훈)　|　Motion for a Better Tomorrow</span><button id="connect" class="connect">CONNECT</button><span id="msg">Project Rebirth　|　ESP32 + BLE + Stepper Motor</span></footer>
+</main></div>
+<script>
+'use strict';
+const BASE_W=1600,BASE_H=1000,hmi=document.getElementById('hmi');function fit(){const s=Math.min(innerWidth/BASE_W,innerHeight/BASE_H);hmi.style.transform=`translate(-50%,-50%) scale(${s})`}addEventListener('resize',fit);addEventListener('orientationchange',fit);fit();
+const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e',RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e',TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';let device=null,rx=null,tx=null,connected=false,s1=false,s2=false,mode='SE';const $=id=>document.getElementById(id),enc=new TextEncoder(),dec=new TextDecoder(),controls=['fwd','rev','setStart','setEnd','home','run','pause','stop'];
+function sensorUI(){$('s1Card').classList.toggle('limit',s1);$('s2Card').classList.toggle('limit',s2);$('s1State').textContent=s1?'LIMIT':'CLEAR';$('s2State').textContent=s2?'LIMIT':'CLEAR'}function enableUI(){controls.forEach(id=>$(id).classList.toggle('disabled',!connected));$('fwd').classList.toggle('blocked',connected&&s1);$('rev').classList.toggle('blocked',connected&&s2)}function connection(v){connected=v;$('connect').textContent=v?'DISCONNECT':'CONNECT';$('bleText').textContent=v?'BLE CONNECTED':'BLE DISCONNECTED';$('bleLamp').classList.toggle('on',v);$('readyLamp').classList.toggle('on',v);enableUI()}async function send(c){if(!connected||!rx)return;const d=enc.encode(c);if(typeof rx.writeValueWithoutResponse==='function')await rx.writeValueWithoutResponse(d);else await rx.writeValue(d)}async function connectBLE(){if(connected){try{await send('STOP')}catch(e){}if(device?.gatt?.connected)device.gatt.disconnect();connection(false);return}try{device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',()=>connection(false));const g=await device.gatt.connect(),svc=await g.getPrimaryService(SERVICE);rx=await svc.getCharacteristic(RX);tx=await svc.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',receive);connection(true);await send('GET_SENSORS');await send('GET_POS')}catch(e){$('msg').textContent=e.message;connection(false)}}function receive(e){const p=dec.decode(e.target.value).trim().split(','),t=(p[0]||'').toUpperCase();if(t==='POS'){if(p[1])$('current').textContent=Number(p[1]).toFixed(2);if(p[2])$('start').textContent=Number(p[2]).toFixed(2);if(p[3])$('end').textContent=Number(p[3]).toFixed(2);if(p[4])$('speed').textContent=Number(p[4]).toFixed(2)}else if(t==='SPEED')$('speed').textContent=Number(p[1]).toFixed(2);else if(t==='SENSORS'){s1=p[1]==='1';s2=p[2]==='1';sensorUI();enableUI();$('msg').textContent=s1?'S1 LIMIT: REV escape enabled':s2?'S2 LIMIT: FWD escape enabled':'Limits clear'}else if(t==='LIMIT'){if(p[1]==='S1')s1=true;if(p[1]==='S2')s2=true;sensorUI();enableUI()}else if(t==='STATE')$('msg').textContent='MOTOR: '+(p[1]||'STOP');else if(t==='MESSAGE'||t==='ERROR')$('msg').textContent=p.slice(1).join(',')}
+$('connect').onclick=connectBLE;$('fwd').onclick=()=>{if(connected&&!s1)send('FWD')};$('rev').onclick=()=>{if(connected&&!s2)send('REV')};$('setStart').onclick=()=>send('SET_START');$('setEnd').onclick=()=>send('SET_END');$('home').onclick=()=>send('HOME');$('stop').onclick=()=>send('STOP');$('pause').onclick=()=>send('PAUSE');$('run').onclick=()=>send(mode==='SE'?'AUTO_RUN':mode==='ONE'?'RUN_ONE':mode==='N'?'RUN_N':'RUN_CONT');document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode});$('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.'};setInterval(()=>{$('clock').firstChild.textContent=new Date().toLocaleString('ko-KR',{hour12:false})},1000);connection(false);sensorUI();
+</script>
+</body>
+</html>
