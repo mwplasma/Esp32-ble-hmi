@@ -147,6 +147,19 @@ button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.d
   border-top-color:#ff7a18 !important;
   filter:drop-shadow(0 0 12px #ff7a18) !important;
 } 
+  /* =====================================================
+   SET START / SET END PRESS FEEDBACK
+   ===================================================== */
+
+#setStart.pressed,
+#setEnd.pressed{
+  background:linear-gradient(#46df34,#18b719) !important;
+  color:#fff !important;
+  box-shadow:
+    inset 0 4px 12px rgba(0,0,0,.30),
+    0 0 14px rgba(70,223,52,.55) !important;
+  transform:translateY(2px);
+}
 </style>
 </head>
 <body>
@@ -331,8 +344,63 @@ window.addEventListener(
 
   }
 );
-  $('setStart').onclick=()=>send('SET_START');
-  $('setEnd').onclick=()=>send('SET_END');
+/* =====================================================
+   SET START BUTTON
+   ===================================================== */
+
+$('setStart').onpointerdown = e => {
+  e.preventDefault();
+
+  $('setStart').classList.add('pressed');
+
+  if(connected){
+    send('SET_START');
+  }
+};
+
+$('setStart').onpointerup = e => {
+  e.preventDefault();
+
+  $('setStart').classList.remove('pressed');
+};
+
+$('setStart').onpointercancel = () => {
+  $('setStart').classList.remove('pressed');
+};
+
+$('setStart').onpointerleave = () => {
+  $('setStart').classList.remove('pressed');
+};
+
+
+/* =====================================================
+   SET END BUTTON
+   ===================================================== */
+
+$('setEnd').onpointerdown = e => {
+  e.preventDefault();
+
+  $('setEnd').classList.add('pressed');
+
+  if(connected){
+    send('SET_END');
+  }
+};
+
+$('setEnd').onpointerup = e => {
+  e.preventDefault();
+
+  $('setEnd').classList.remove('pressed');
+};
+
+$('setEnd').onpointercancel = () => {
+  $('setEnd').classList.remove('pressed');
+};
+
+$('setEnd').onpointerleave = () => {
+  $('setEnd').classList.remove('pressed');
+};
+
 /* =====================================================
    HOME - IMMEDIATE SINGLE PRESS
    ===================================================== */
