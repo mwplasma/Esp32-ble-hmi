@@ -172,7 +172,9 @@ function startJog(direction){
 
   if(!connected)
     return;
-
+ // Leaving HOME position
+  $('home').classList.remove('homed');
+  $('home').classList.remove('homing');
   if(direction === 'FWD'){
 
     // S1 active -> FWD blocked
