@@ -87,32 +87,44 @@ button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.d
 'use strict';
 const BASE_W=1600,BASE_H=1000,hmi=document.getElementById('hmi');function fit(){const s=Math.min(innerWidth/BASE_W,innerHeight/BASE_H);hmi.style.transform=`translate(-50%,-50%) scale(${s})`}addEventListener('resize',fit);addEventListener('orientationchange',fit);fit();
 const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e',RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e',TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';let device=null,rx=null,tx=null,connected=false,s1=false,s2=false,mode='SE';const $=id=>document.getElementById(id),enc=new TextEncoder(),dec=new TextDecoder(),controls=['fwd','rev','setStart','setEnd','home','run','pause','stop'];
-function sensorUI(){$('s1Card').classList.toggle('limit',s1);$('s2Card').classList.toggle('limit',s2);$('s1State').textContent=s1?'LIMIT':'CLEAR';$('s2State').textContent=s2?'LIMIT':'CLEAR'}function enableUI(){controls.forEach(id=>$(id).classList.toggle('dim',!connected));$('fwd').classList.toggle('blocked',connected&&s1);$('rev').classList.toggle('blocked',connected&&s2)}function connection(v){connected=v;$('connect').textContent=v?'DISCONNECT':'CONNECT';$('bleText').textContent=v?'BLE CONNECTED':'BLE DISCONNECTED';$('bleLamp').classList.toggle('on',v);$('readyLamp').classList.toggle('on',v);enableUI()}async function send(c){if(!connected||!rx)return;const d=enc.encode(c);if(typeof rx.writeValueWithoutResponse==='function')await rx.writeValueWithoutResponse(d);else await rx.writeValue(d)}async function connectBLE(){if(connected){try{await send('STOP')}catch(e){}if(device?.gatt?.connected)device.gatt.disconnect();connection(false);return}try{device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',()=>connection(false));const g=await device.gatt.connect(),svc=await g.getPrimaryService(SERVICE);rx=await svc.getCharacteristic(RX);tx=await svc.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',receive);connection(true);await send('GET_SENSORS');await send('GET_POS')}catch(e){$('msg').textContent=e.message;connection(false)}}function receive(e){const p=dec.decode(e.target.value).trim().split(','),t=(p[0]||'').toUpperCase();if(t==='POS'){if(p[1])$('current').textContent=Number(p[1]).toFixed(2);if(p[2])$('start').textContent=Number(p[2]).toFixed(2);if(p[3])$('end').textContent=Number(p[3]).toFixed(2);if(p[4])$('speed').textContent=Number(p[4]).toFixed(2)}else if(t==='SPEED')$('speed').textContent=Number(p[1]).toFixed(2);else if(t==='SENSORS'){s1=p[1]==='1';s2=p[2]==='1';sensorUI();enableUI();$('msg').textContent=s1?'S1 LIMIT: REV escape enabled':s2?'S2 LIMIT: FWD escape enabled':'Limits clear'}
+function sensorUI(){$('s1Card').classList.toggle('limit',s1);$('s2Card').classList.toggle('limit',s2);$('s1State').textContent=s1?'LIMIT':'CLEAR';$('s2State').textContent=s2?'LIMIT':'CLEAR'}function enableUI(){controls.forEach(id=>$(id).classList.toggle('dim',!connected));$('fwd').classList.toggle('blocked',connected&&s1);$('rev').classList.toggle('blocked',connected&&s2)}function connection(v){connected=v;$('connect').textContent=v?'DISCONNECT':'CONNECT';$('bleText').textContent=v?'BLE CONNECTED':'BLE DISCONNECTED';$('bleLamp').classList.toggle('on',v);$('readyLamp').classList.toggle('on',v);enableUI()}async function send(c){if(!connected||!rx)return;const d=enc.encode(c);if(typeof rx.writeValueWithoutResponse==='function')await rx.writeValueWithoutResponse(d);else await rx.writeValue(d)}async function connectBLE(){if(connected){try{await send('STOP')}catch(e){}if(device?.gatt?.connected)device.gatt.disconnect();connection(false);return}try{device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',()=>connection(false));const g=await device.gatt.connect(),svc=await g.getPrimaryService(SERVICE);rx=await svc.getCharacteristic(RX);tx=await svc.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',receive);connection(true);await send('GET_SENSORS');await send('GET_POS')}catch(e){$('msg').textContent=e.message;connection(false)}}function receive(e){
+  const p=dec.decode(e.target.value).trim().split(',');
+  const t=(p[0]||'').toUpperCase();
 
-else if(t==='LIMIT'){
-  if(p[1]==='S1')s1=true;
-  if(p[1]==='S2')s2=true;
-  sensorUI();
-  enableUI();
-}
-else if(t==='STATE')
-  $('msg').textContent='MOTOR: '+(p[1]||'STOP');
-else if(t==='MESSAGE'||t==='ERROR')
-  $('msg').textContent=p.slice(1).join(',')};
-/* =====================================================
-   RUN STATUS
-   AUTO,RUN  -> RUN button GREEN
-   AUTO,STOP -> RUN button NORMAL
-   ===================================================== */
-else if(t==='AUTO'){
-  const running=(p[1]||'').toUpperCase()==='RUN';
-  $('run').classList.toggle('running',running);
+  if(t==='POS'){
+    if(p[1]) $('current').textContent=Number(p[1]).toFixed(2);
+    if(p[2]) $('start').textContent=Number(p[2]).toFixed(2);
+    if(p[3]) $('end').textContent=Number(p[3]).toFixed(2);
+    if(p[4]) $('speed').textContent=Number(p[4]).toFixed(2);
+  }
+  else if(t==='SPEED'){
+    $('speed').textContent=Number(p[1]).toFixed(2);
+  }
+  else if(t==='SENSORS'){
+    s1=p[1]==='1';
+    s2=p[2]==='1';
+    sensorUI();
+    enableUI();
+    $('msg').textContent=s1?'S1 LIMIT: REV escape enabled':s2?'S2 LIMIT: FWD escape enabled':'Limits clear';
+  }
+  else if(t==='LIMIT'){
+    if(p[1]==='S1') s1=true;
+    if(p[1]==='S2') s2=true;
+    sensorUI();
+    enableUI();
+  }
+  else if(t==='STATE'){
+    $('msg').textContent='MOTOR: '+(p[1]||'STOP');
+  }
+  else if(t==='AUTO'){
+    const running=(p[1]||'').toUpperCase()==='RUN';
+    $('run').classList.toggle('running',running);
+  }
+  else if(t==='MESSAGE'||t==='ERROR'){
+    $('msg').textContent=p.slice(1).join(',');
+  }
 }
 
-else if(t==='MESSAGE'||t==='ERROR'){
-  $('msg').textContent=p.slice(1).join(',');
-}
-  
 $('connect').onclick=connectBLE;/* =====================================================
    JOG - PRESS AND HOLD
    ===================================================== */
