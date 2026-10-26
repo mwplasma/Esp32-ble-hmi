@@ -17,14 +17,22 @@ button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.d
 .home{grid-column:1/3;border-radius:11px;background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f);color:#07346b;font-size:35px;box-shadow:0 6px 10px #002b3b}
 .home small{display:block;font-size:18px;margin-top:2px}
 /* HOME button press feedback */
-.home.pressed{
-  background:linear-gradient(#42d95b,#15962f);
-  color:#fff;
-  box-shadow:inset 0 4px 12px rgba(0,0,0,.45);
-  transform:translateY(2px);
+/* HOME - homing in progress */
+.home.homing{
+  background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f);
+  color:#07346b;
+  box-shadow:0 0 14px rgba(255,211,54,.7);
 }
 
-.home.pressed small{
+/* HOME - homing completed */
+.home.homed{
+  background:linear-gradient(#46df34,#18b719);
+  color:#fff;
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.25),
+             0 0 14px rgba(70,223,52,.55);
+}
+
+.home.homed small{
   color:#fff;
 }
   
@@ -121,8 +129,39 @@ function sensorUI(){$('s1Card').classList.toggle('limit',s1);$('s2Card').classLi
     $('run').classList.toggle('running',running);
   }
   else if(t==='MESSAGE'||t==='ERROR'){
-    $('msg').textContent=p.slice(1).join(',');
+
+  const message=p.slice(1).join(',');
+
+  $('msg').textContent=message;
+
+  /* HOME moving */
+  if(
+    message.includes('HOME SEEKING S1')
+    ||
+    message.includes('HOME S1 FOUND')
+  ){
+    $('home').classList.remove('homed');
+    $('home').classList.add('homing');
   }
+
+  /* HOME completed */
+  if(
+    message.includes('HOME COMPLETE')
+  ){
+    $('home').classList.remove('homing');
+    $('home').classList.add('homed');
+  }
+
+  /* HOME canceled / error */
+  if(
+    message.includes('HOME CANCELED')
+    ||
+    (t==='ERROR' && message.includes('HOME'))
+  ){
+    $('home').classList.remove('homing');
+    $('home').classList.remove('homed');
+  }
+}
 }
 
 $('connect').onclick=connectBLE;/* =====================================================
@@ -271,9 +310,12 @@ function homePress(e){
     e.stopPropagation();
   }
 
-  homeBtn.classList.add('pressed');
-
   if(connected){
+
+    // HOME 시작
+    homeBtn.classList.remove('homed');
+    homeBtn.classList.add('homing');
+
     send('HOME');
   }
 }
@@ -283,8 +325,6 @@ function homeRelease(e){
     e.preventDefault();
     e.stopPropagation();
   }
-
-  homeBtn.classList.remove('pressed');
 }
 
 homeBtn.addEventListener('pointerdown', homePress);
