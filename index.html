@@ -347,6 +347,21 @@ document.querySelectorAll('.mode').forEach(button=>button.onclick=()=>{
   document.querySelectorAll('.mode').forEach(item=>item.classList.remove('active'));
   button.classList.add('active');
   mode=button.dataset.mode;
+
+  // Reset the count display for the newly selected mode.
+  if(mode==='SE'){
+    $('repeat').textContent='1';
+    $('count').textContent='0 / 1';
+  }else if(mode==='ONE'){
+    $('repeat').textContent='1';
+    $('count').textContent='0 / 1';
+  }else if(mode==='N'){
+    $('repeat').textContent=String(repeatSetting);
+    $('count').textContent='0 / '+repeatSetting;
+  }else if(mode==='CONT'){
+    $('repeat').textContent='∞';
+    $('count').textContent='0 / ∞';
+  }
 });
 
 $('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.';};
