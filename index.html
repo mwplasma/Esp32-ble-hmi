@@ -286,7 +286,13 @@ stopBtn.addEventListener('contextmenu', e => {
   e.preventDefault();
 });
    
-$('pause').onclick=()=>send('PAUSE');$('run').onclick=()=>send(mode==='SE'?'AUTO_RUN':mode==='ONE'?'RUN_ONE':mode==='N'?'RUN_N':'RUN_CONT');document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode});$('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.'};setInterval(()=>{$('clock').firstChild.textContent=new Date().toLocaleString('ko-KR',{hour12:false})},1000);connection(false);sensorUI();
+$('pause').onclick=()=>send('PAUSE');
+  $('run').onclick=()=>send(
+  mode==='SE'?'RUN_SE':
+  mode==='ONE'?'RUN_ONE':
+  mode==='N'?'RUN_N':'RUN_CONT'
+);
+  document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode});$('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.'};setInterval(()=>{$('clock').firstChild.textContent=new Date().toLocaleString('ko-KR',{hour12:false})},1000);connection(false);sensorUI();
 </script>
 </body>
 </html>
