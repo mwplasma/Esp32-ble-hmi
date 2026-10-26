@@ -266,20 +266,7 @@ const jogGestureTargets = [
   });
 });
 
-/* =====================================================
-   SAFETY - WINDOW LOST FOCUS -> STOP
-   ===================================================== */
 
-window.addEventListener(
-  'blur',
-  () => {
-
-    if(connected){
-      send('STOP');
-    }
-
-  }
-);
   $('setStart').onclick=()=>send('SET_START');
   $('setEnd').onclick=()=>send('SET_END');
 /* =====================================================
