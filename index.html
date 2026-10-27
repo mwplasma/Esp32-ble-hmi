@@ -14,80 +14,19 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#e8edef;fon
 button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.dim{filter:saturate(.82);opacity:.72}.blocked{filter:grayscale(1)!important;opacity:.34!important}
 .header{display:grid;grid-template-columns:1fr 235px 235px 175px;gap:20px;align-items:center;border-bottom:2px solid #82adba}.title{font-size:42px;font-weight:900;white-space:nowrap;letter-spacing:1px;line-height:1}.subtitle{font-size:20px;margin-top:12px}.lamp{height:58px;border:2px solid #16aae6;border-radius:10px;background:#03293d;display:flex;align-items:center;justify-content:center;gap:13px;font-size:16px;font-weight:900}.lampDot{width:28px;height:28px;border-radius:50%;background:#465a62}.lamp.on .lampDot{background:#0af04b;box-shadow:0 0 14px #0af04b}.clock{text-align:right;font-size:14px;font-weight:900;line-height:1.55}
 .upper{position:relative;display:grid;grid-template-columns:655px 427.5px 427.5px;grid-template-rows:345px 70px;column-gap:15px;row-gap:15px;min-height:0}.upper::after{content:"";position:absolute;left:1105px;top:0;bottom:0;width:2px;background:#7da8b5;z-index:1;pointer-events:none}.controls{grid-column:1;grid-row:1/3;display:grid;grid-template-columns:360px 255px;grid-template-rows:335px 85px;gap:10px;padding-right:28px;border-right:2px solid #7da8b5}.jog{border:2px solid #57eff0;border-radius:15px;background:linear-gradient(145deg,#0b747b,#075062);box-shadow:inset 0 0 24px #079ba3;display:grid;grid-template-rows:70px 1fr;padding:10px}.jogTitle{text-align:center;font-size:51px;font-weight:900}.jogBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.jogBtn{background:transparent;color:#fff;font-size:22px;touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important;-webkit-tap-highlight-color:transparent!important}.jog,.jogBtns,.jogBtn,.jogBtn *,.tri{touch-action:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important;-webkit-tap-highlight-color:transparent!important}.tri{display:block;width:0;height:0;margin:0 auto 16px;border-left:57px solid transparent;border-right:57px solid transparent;border-bottom:102px solid #08a9ff;filter:drop-shadow(0 5px 5px #003d5d)}.rev .tri{border-bottom:0;border-top:102px solid #ffd12d;filter:drop-shadow(0 5px 5px #755000)}.setStack{display:grid;grid-template-rows:1fr 1fr;gap:10px}.setBtn{border-radius:11px;background:linear-gradient(#18b6ff,#0876d8);color:#fff;font-size:29px;box-shadow:0 6px 10px #002b3b}.setBtn small{display:block;font-size:17px;margin-top:7px}
-.home{grid-column:1/3;border-radius:11px;background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f);color:#07346b;font-size:35px;box-shadow:0 6px 10px #002b3b}
-.home small{display:block;font-size:18px;margin-top:2px}
-/* HOME button press feedback */
-.home.pressed{
-  background:linear-gradient(#42d95b,#15962f);
-  color:#fff;
-  box-shadow:inset 0 4px 12px rgba(0,0,0,.45);
-  transform:translateY(2px);
-}
-
-.home.pressed small{
-  color:#fff;
-}
-  
+.home{grid-column:1/3;border-radius:11px;background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f);color:#07346b;font-size:35px;box-shadow:0 6px 10px #002b3b}.home small{display:block;font-size:18px;margin-top:2px}.home.pressed{background:linear-gradient(#42d95b,#15962f);color:#fff;box-shadow:inset 0 4px 12px rgba(0,0,0,.45);transform:translateY(2px)}.home.pressed small{color:#fff}
 .stats{display:grid;grid-template-rows:repeat(3,88px);gap:18px;align-content:start;padding:10px 8px 0}.centerStats{grid-column:2;grid-row:1}.rightStats{grid-column:3;grid-row:1;padding-left:15px;position:relative;z-index:2}.stat{display:grid;grid-template-columns:145px 180px 70px;gap:8px;align-items:center;font-size:21px;font-weight:900}.rightStats .stat{grid-template-columns:135px 190px 70px}.label small{display:block;font-size:12px;font-weight:500;margin-top:6px;white-space:nowrap}.value{height:72px;border:2px solid #86b6c4;border-radius:10px;background:#031f2f;color:#24ebff;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;font-size:40px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}.unit{white-space:nowrap}
-.sensors{grid-column:2/4;grid-row:2;display:grid;grid-template-columns:427.5px 427.5px;column-gap:15px;align-self:center;position:relative;z-index:2}.sensorWrap{display:flex;justify-content:center}.sensorWrap.right{}.sensor{width:382px;height:60px;position:relative;z-index:2;border:1px solid #20bd79;border-radius:10px;background:#06483f;color:#a5ffd7;display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:7px 14px;font-size:16px}.sensorDot{width:24px;height:24px;border-radius:50%;background:#16ee7b;box-shadow:0 0 12px #16ee7b}.sensor small{display:block;font-size:10px;font-weight:500}.sensor strong{font-size:17px}.sensor.limit{background:#4a1922;border-color:#ff5062;color:#ffb8c0}.sensor.limit .sensorDot{background:#ff3045;box-shadow:0 0 12px #ff3045}
-.modeLabel{display:flex;align-items:end;border-bottom:2px solid #82aeba;font-size:23px;font-weight:900}.modes,.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.mode,.action{border-radius:12px;box-shadow:0 6px 10px #002b3b}.mode{background:linear-gradient(#17b9ff,#0875d7);color:#fff;font-size:30px}.mode.active{background:linear-gradient(#46df34,#18b719)}.mode small{display:block;font-size:16px;margin-top:5px}.action{background:linear-gradient(#ffd235,#fff2b6 69%,#d9c36d);color:#09356d;font-size:25px}.action .icon{font-size:42px;margin-right:14px}
-.run .icon{color:#079d3a}
-.pause .icon{color:#ff6512}.stop .icon{color:#e6081c}
-/* STOP button press feedback */
-.stop{
-  touch-action:none;
-  -webkit-tap-highlight-color:transparent;
-  transition:background .08s,color .08s,transform .08s,box-shadow .08s;
-}
-
-.stop.pressed{
-  background:linear-gradient(#ff4b4b,#d90000);
-  color:#fff;
-  box-shadow:inset 0 4px 12px rgba(0,0,0,.45);
-  transform:translateY(2px);
-}
-
-.stop.pressed .icon{
-  color:#fff;
-}
-/* RUNNING status */
-.run.running{
-  background:linear-gradient(#46df34,#18b719);
-  color:#fff;
-  box-shadow:inset 0 4px 12px rgba(0,0,0,.35),0 0 14px rgba(70,223,52,.55);
-}
-
-.run.running .icon{
-  color:#fff;
-}
-.run .icon{color:#079d3a}
-.pause .icon{color:#ff6512}
-.stop .icon{color:#e6081c}
-   
+.sensors{grid-column:2/4;grid-row:2;display:grid;grid-template-columns:427.5px 427.5px;column-gap:15px;align-self:center;position:relative;z-index:2}.sensorWrap{display:flex;justify-content:center}.sensor{width:382px;height:60px;position:relative;z-index:2;border:1px solid #20bd79;border-radius:10px;background:#06483f;color:#a5ffd7;display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:7px 14px;font-size:16px}.sensorDot{width:24px;height:24px;border-radius:50%;background:#16ee7b;box-shadow:0 0 12px #16ee7b}.sensor small{display:block;font-size:10px;font-weight:500}.sensor strong{font-size:17px}.sensor.limit{background:#4a1922;border-color:#ff5062;color:#ffb8c0}.sensor.limit .sensorDot{background:#ff3045;box-shadow:0 0 12px #ff3045}
+.modeLabel{display:flex;align-items:end;border-bottom:2px solid #82aeba;font-size:23px;font-weight:900}.modes,.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.mode,.action{border-radius:12px;box-shadow:0 6px 10px #002b3b}.mode{background:linear-gradient(#17b9ff,#0875d7);color:#fff;font-size:30px}.mode.active{background:linear-gradient(#46df34,#18b719)}.mode small{display:block;font-size:16px;margin-top:5px}.action{background:linear-gradient(#ffd235,#fff2b6 69%,#d9c36d);color:#09356d;font-size:25px}.action .icon{font-size:42px;margin-right:14px}.run .icon{color:#079d3a}.pause .icon{color:#ff6512}.stop .icon{color:#e6081c}
+.stop{touch-action:none;-webkit-tap-highlight-color:transparent;transition:background .08s,color .08s,transform .08s,box-shadow .08s}.stop.pressed{background:linear-gradient(#ff4b4b,#d90000)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.45)!important;transform:translateY(2px)}.stop.pressed .icon{color:#fff!important}.run.running{background:linear-gradient(#46df34,#18b719)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.35),0 0 14px rgba(70,223,52,.55)!important}.run.running .icon{color:#fff!important}
+.pause.paused{background:linear-gradient(#ffad33,#f07800)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.35),0 0 14px rgba(255,140,0,.60)!important;transform:translateY(2px)}.pause.paused .icon{color:#fff!important}
 .config{background:#063a54;color:#fff;border:2px solid #17ade8}.footer{position:relative;border-top:1px solid #558899;display:flex;align-items:center;justify-content:space-between;font-size:12px}.connect{position:absolute;left:50%;transform:translateX(-50%);border:1px solid #42c8ff;border-radius:18px;background:linear-gradient(#18b2ff,#0874cb);color:#fff;font-size:14px;padding:8px 58px}
 @media print{#hmi{transform:translate(-50%,-50%) scale(1)!important}}
 @media(orientation:portrait){#hmi{display:none}#viewport:after{content:'Galaxy Tab을 가로로 돌려주세요.';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#04364b;color:#fff;font-size:28px;font-weight:900}}
-
-/* ===== Project Rebirth final interaction feedback ===== */
-.value.editable{cursor:pointer;border-color:#ffd336}
-.value.editable:active{background:#163b4a}
-
-#fwd.pressed{background:rgba(0,255,100,.20)!important;border-radius:12px!important;box-shadow:inset 0 0 25px rgba(0,255,100,.55)!important}
-#fwd.pressed .tri{border-bottom-color:#39ff63!important;filter:drop-shadow(0 0 12px #39ff63)!important}
-#rev.pressed{background:rgba(255,140,0,.22)!important;border-radius:12px!important;box-shadow:inset 0 0 25px rgba(255,140,0,.60)!important}
-#rev.pressed .tri{border-top-color:#ff7a18!important;filter:drop-shadow(0 0 12px #ff7a18)!important}
-
+.value.editable{cursor:pointer;border-color:#ffd336}.value.editable:active{background:#163b4a}
+#fwd.pressed{background:rgba(0,255,100,.20)!important;border-radius:12px!important;box-shadow:inset 0 0 25px rgba(0,255,100,.55)!important}#fwd.pressed .tri{border-bottom-color:#39ff63!important;filter:drop-shadow(0 0 12px #39ff63)!important}#rev.pressed{background:rgba(255,140,0,.22)!important;border-radius:12px!important;box-shadow:inset 0 0 25px rgba(255,140,0,.60)!important}#rev.pressed .tri{border-top-color:#ff7a18!important;filter:drop-shadow(0 0 12px #ff7a18)!important}
 #setStart.pressed,#setEnd.pressed{background:linear-gradient(#46df34,#18b719)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.30),0 0 14px rgba(70,223,52,.55)!important;transform:translateY(2px)}
-
-.home.homing{background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f)!important;color:#07346b!important;box-shadow:0 0 14px rgba(255,211,54,.7)!important}
-.home.homed{background:linear-gradient(#46df34,#18b719)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.25),0 0 14px rgba(70,223,52,.55)!important}
-.home.homed small{color:#fff!important}
-
-.stop.pressed{background:linear-gradient(#ff4b4b,#d90000)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.45)!important;transform:translateY(2px)}
-.stop.pressed .icon{color:#fff!important}
-.run.running{background:linear-gradient(#46df34,#18b719)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.35),0 0 14px rgba(70,223,52,.55)!important}
-.run.running .icon{color:#fff!important}
-
+.home.homing{background:linear-gradient(#ffd336,#fff2b8 70%,#dcc66f)!important;color:#07346b!important;box-shadow:0 0 14px rgba(255,211,54,.7)!important}.home.homed{background:linear-gradient(#46df34,#18b719)!important;color:#fff!important;box-shadow:inset 0 4px 12px rgba(0,0,0,.25),0 0 14px rgba(70,223,52,.55)!important}.home.homed small{color:#fff!important}
 </style>
 </head>
 <body>
@@ -101,273 +40,41 @@ button{font-family:inherit;font-weight:900;border:0;touch-action:manipulation}.d
 </section>
 <div class="modeLabel">운전모드</div>
 <section class="modes"><button class="mode active" data-mode="SE">SE<small>시작 → 종점</small></button><button class="mode" data-mode="ONE">1회<small>1회 왕복</small></button><button class="mode" data-mode="N">N회<small>지정 횟수 왕복</small></button><button class="mode" data-mode="CONT">연속<small>무한 반복</small></button></section>
-<section class="actions"><button id="run" class="action run dim"><span class="icon">▶</span>실행　RUN</button><button id="pause" class="action pause dim"><span class="icon">Ⅱ</span>일시정지　PAUSE</button><button id="stop" class="action stop dim"><span class="icon">■</span>정지　STOP</button><button id="config" class="action config">⚙　CONFIG</button></section>
+<section class="actions"><button id="run" class="action run dim"><span class="icon">▶</span>실행　RUN</button><button id="pause" class="action pause dim"><span class="icon">Ⅱ</span><span class="pauseText">일시정지　PAUSE</span></button><button id="stop" class="action stop dim"><span class="icon">■</span>정지　STOP</button><button id="config" class="action config">⚙　CONFIG</button></section>
 <footer class="footer"><span>Jeong Hoon Kim (김정훈)　|　Motion for a Better Tomorrow</span><button id="connect" class="connect">CONNECT</button><span id="msg">Project Rebirth　|　ESP32 + BLE + Stepper Motor</span></footer>
 </main></div>
 <script>
 'use strict';
-
-const BASE_W=1600, BASE_H=1000;
-const hmi=document.getElementById('hmi');
-const $=id=>document.getElementById(id);
-const enc=new TextEncoder();
-const dec=new TextDecoder();
-
-function fit(){
-  const scale=Math.min(innerWidth/BASE_W,innerHeight/BASE_H);
-  hmi.style.transform=`translate(-50%,-50%) scale(${scale})`;
-}
-addEventListener('resize',fit);
-addEventListener('orientationchange',fit);
-fit();
-
-const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e';
-const TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
-let device=null, rx=null, tx=null;
-let connected=false, s1=false, s2=false, mode='SE';
-let repeatSetting=10;
+const BASE_W=1600,BASE_H=1000,hmi=document.getElementById('hmi'),$=id=>document.getElementById(id),enc=new TextEncoder(),dec=new TextDecoder();
+function fit(){const scale=Math.min(innerWidth/BASE_W,innerHeight/BASE_H);hmi.style.transform=`translate(-50%,-50%) scale(${scale})`}
+addEventListener('resize',fit);addEventListener('orientationchange',fit);fit();
+const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e',RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e',TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+let device=null,rx=null,tx=null,connected=false,s1=false,s2=false,mode='SE',repeatSetting=10,isPaused=false;
 const controls=['fwd','rev','setStart','setEnd','home','run','pause','stop'];
-
-function sensorUI(){
-  $('s1Card').classList.toggle('limit',s1);
-  $('s2Card').classList.toggle('limit',s2);
-  $('s1State').textContent=s1?'LIMIT':'CLEAR';
-  $('s2State').textContent=s2?'LIMIT':'CLEAR';
-}
-
-function enableUI(){
-  controls.forEach(id=>$(id).classList.toggle('dim',!connected));
-  $('fwd').classList.toggle('blocked',connected&&s1);
-  $('rev').classList.toggle('blocked',connected&&s2);
-}
-
-function connection(value){
-  connected=value;
-  $('connect').textContent=value?'DISCONNECT':'CONNECT';
-  $('bleText').textContent=value?'BLE CONNECTED':'BLE DISCONNECTED';
-  $('bleLamp').classList.toggle('on',value);
-  $('readyLamp').classList.toggle('on',value);
-  if(!value) $('run').classList.remove('running');
-  enableUI();
-}
-
-async function send(command){
-  if(!connected||!rx) return;
-  const data=enc.encode(command);
-  if(typeof rx.writeValueWithoutResponse==='function') await rx.writeValueWithoutResponse(data);
-  else await rx.writeValue(data);
-}
-
-async function connectBLE(){
-  if(connected){
-    try{await send('STOP');}catch(error){}
-    if(device?.gatt?.connected) device.gatt.disconnect();
-    connection(false);
-    return;
-  }
-  try{
-    device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});
-    device.addEventListener('gattserverdisconnected',()=>connection(false));
-    const gatt=await device.gatt.connect();
-    const service=await gatt.getPrimaryService(SERVICE);
-    rx=await service.getCharacteristic(RX);
-    tx=await service.getCharacteristic(TX);
-    await tx.startNotifications();
-    tx.addEventListener('characteristicvaluechanged',receive);
-    connection(true);
-    await send('GET_SENSORS');
-    await send('GET_POS');
-  }catch(error){
-    $('msg').textContent=error.message;
-    connection(false);
-  }
-}
-
-function receive(event){
-  const p=dec.decode(event.target.value).trim().split(',');
-  const type=(p[0]||'').toUpperCase();
-
-  if(type==='POS'){
-    if(p[1]) $('current').textContent=Number(p[1]).toFixed(2);
-    if(p[2]) $('start').textContent=Number(p[2]).toFixed(2);
-    if(p[3]) $('end').textContent=Number(p[3]).toFixed(2);
-    if(p[4]) $('speed').textContent=Number(p[4]).toFixed(2);
-  }else if(type==='SPEED'){
-    $('speed').textContent=Number(p[1]).toFixed(2);
-  }else if(type==='SENSORS'){
-    s1=p[1]==='1';
-    s2=p[2]==='1';
-    sensorUI();
-    enableUI();
-    $('msg').textContent=s1?'S1 LIMIT: REV escape enabled':s2?'S2 LIMIT: FWD escape enabled':'Limits clear';
-  }else if(type==='LIMIT'){
-    if(p[1]==='S1') s1=true;
-    if(p[1]==='S2') s2=true;
-    sensorUI();
-    enableUI();
-    $('run').classList.remove('running');
-  }else if(type==='STATE'){
-    $('msg').textContent='MOTOR: '+(p[1]||'STOP');
-  }else if(type==='AUTO'){
-    $('run').classList.toggle('running',(p[1]||'').toUpperCase()==='RUN');
-  }else if(type==='COUNT'){
-    const current=parseInt(p[1]||'0',10);
-    const total=parseInt(p[2]||'0',10);
-    $('count').textContent=current+' / '+total;
-  }else if(type==='MESSAGE'||type==='ERROR'){
-    const message=p.slice(1).join(',');
-    $('msg').textContent=message;
-    if(message.includes('HOME SEEKING S1')||message.includes('HOME S1 FOUND')){
-      $('home').classList.remove('homed');
-      $('home').classList.add('homing');
-    }
-    if(message.includes('HOME COMPLETE')){
-      $('home').classList.remove('homing');
-      $('home').classList.add('homed');
-    }
-    if(message.includes('HOME CANCELED')||(type==='ERROR'&&message.includes('HOME'))){
-      $('home').classList.remove('homing','homed');
-    }
-  }
-}
-
+function sensorUI(){$('s1Card').classList.toggle('limit',s1);$('s2Card').classList.toggle('limit',s2);$('s1State').textContent=s1?'LIMIT':'CLEAR';$('s2State').textContent=s2?'LIMIT':'CLEAR'}
+function enableUI(){controls.forEach(id=>$(id).classList.toggle('dim',!connected));$('fwd').classList.toggle('blocked',connected&&s1);$('rev').classList.toggle('blocked',connected&&s2)}
+function pauseUI(paused){isPaused=paused;const b=$('pause'),i=b.querySelector('.icon'),t=b.querySelector('.pauseText');b.classList.toggle('paused',paused);i.textContent=paused?'▶':'Ⅱ';t.textContent=paused?'계속　RESUME':'일시정지　PAUSE'}
+function connection(value){connected=value;$('connect').textContent=value?'DISCONNECT':'CONNECT';$('bleText').textContent=value?'BLE CONNECTED':'BLE DISCONNECTED';$('bleLamp').classList.toggle('on',value);$('readyLamp').classList.toggle('on',value);if(!value){$('run').classList.remove('running');pauseUI(false)}enableUI()}
+async function send(command){if(!connected||!rx)return;const data=enc.encode(command);if(typeof rx.writeValueWithoutResponse==='function')await rx.writeValueWithoutResponse(data);else await rx.writeValue(data)}
+async function connectBLE(){if(connected){try{await send('STOP')}catch(error){}if(device?.gatt?.connected)device.gatt.disconnect();connection(false);return}try{device=await navigator.bluetooth.requestDevice({filters:[{services:[SERVICE]}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',()=>connection(false));const gatt=await device.gatt.connect(),service=await gatt.getPrimaryService(SERVICE);rx=await service.getCharacteristic(RX);tx=await service.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',receive);connection(true);await send('GET_SENSORS');await send('GET_POS')}catch(error){$('msg').textContent=error.message;connection(false)}}
+function receive(event){const p=dec.decode(event.target.value).trim().split(','),type=(p[0]||'').toUpperCase();if(type==='POS'){if(p[1])$('current').textContent=Number(p[1]).toFixed(2);if(p[2])$('start').textContent=Number(p[2]).toFixed(2);if(p[3])$('end').textContent=Number(p[3]).toFixed(2);if(p[4])$('speed').textContent=Number(p[4]).toFixed(2)}else if(type==='SPEED'){$('speed').textContent=Number(p[1]).toFixed(2)}else if(type==='SENSORS'){s1=p[1]==='1';s2=p[2]==='1';sensorUI();enableUI();$('msg').textContent=s1?'S1 LIMIT: REV escape enabled':s2?'S2 LIMIT: FWD escape enabled':'Limits clear'}else if(type==='LIMIT'){if(p[1]==='S1')s1=true;if(p[1]==='S2')s2=true;sensorUI();enableUI();$('run').classList.remove('running');pauseUI(false)}else if(type==='STATE'){$('msg').textContent='MOTOR: '+(p[1]||'STOP')}else if(type==='AUTO'){const state=(p[1]||'').toUpperCase();$('run').classList.toggle('running',state==='RUN'||state==='PAUSE');if(state==='PAUSE')pauseUI(true);else if(state==='RUN'||state==='STOP')pauseUI(false)}else if(type==='COUNT'){const current=parseInt(p[1]||'0',10),total=parseInt(p[2]||'0',10);$('count').textContent=current+' / '+total}else if(type==='MESSAGE'||type==='ERROR'){const message=p.slice(1).join(',');$('msg').textContent=message;if(message.includes('HOME SEEKING S1')||message.includes('HOME S1 FOUND')){$('home').classList.remove('homed');$('home').classList.add('homing')}if(message.includes('HOME COMPLETE')){$('home').classList.remove('homing');$('home').classList.add('homed')}if(message.includes('HOME CANCELED')||(type==='ERROR'&&message.includes('HOME')))$('home').classList.remove('homing','homed')}}
 $('connect').onclick=connectBLE;
-
-function startJog(direction){
-  if(!connected) return;
-  if(direction==='FWD'&&s1) return;
-  if(direction==='REV'&&s2) return;
-  $('home').classList.remove('homed','homing');
-  send(direction);
-}
-function stopJog(){if(connected) send('STOP');}
-
-function bindJog(id,direction){
-  const button=$(id);
-  button.onpointerdown=event=>{
-    event.preventDefault();
-    button.setPointerCapture(event.pointerId);
-    button.classList.add('pressed');
-    startJog(direction);
-  };
-  const release=event=>{
-    if(event) event.preventDefault();
-    button.classList.remove('pressed');
-    stopJog();
-  };
-  button.onpointerup=release;
-  button.onpointercancel=release;
-}
-bindJog('fwd','FWD');
-bindJog('rev','REV');
-
-[document.querySelector('.jog'),document.querySelector('.jogBtns'),$('fwd'),$('rev')]
-  .filter(Boolean)
-  .forEach(element=>['contextmenu','selectstart','dragstart'].forEach(name=>element.addEventListener(name,event=>{
-    event.preventDefault();
-    event.stopPropagation();
-  },{capture:true})));
-
-function bindMomentaryCommand(id,command){
-  const button=$(id);
-  button.onpointerdown=event=>{
-    event.preventDefault();
-    button.classList.add('pressed');
-    if(connected) send(command);
-  };
-  const release=event=>{
-    if(event) event.preventDefault();
-    button.classList.remove('pressed');
-  };
-  button.onpointerup=release;
-  button.onpointercancel=release;
-  button.onpointerleave=release;
-}
-bindMomentaryCommand('setStart','SET_START');
-bindMomentaryCommand('setEnd','SET_END');
-
-const homeBtn=$('home');
-homeBtn.onpointerdown=event=>{
-  event.preventDefault();
-  if(!connected) return;
-  homeBtn.classList.remove('homed');
-  homeBtn.classList.add('homing');
-  send('HOME');
-};
-homeBtn.oncontextmenu=event=>event.preventDefault();
-
-const stopBtn=$('stop');
-stopBtn.onpointerdown=event=>{
-  event.preventDefault();
-  stopBtn.classList.add('pressed');
-  if(connected) send('STOP');
-};
-const releaseStop=event=>{
-  if(event) event.preventDefault();
-  stopBtn.classList.remove('pressed');
-};
-stopBtn.onpointerup=releaseStop;
-stopBtn.onpointercancel=releaseStop;
-stopBtn.onpointerleave=releaseStop;
-stopBtn.oncontextmenu=event=>event.preventDefault();
-
-$('pause').onclick=()=>send('PAUSE');
-
-$('repeat').onclick=()=>{
-  const entered=prompt('반복 횟수를 입력하세요 (1~999)',String(repeatSetting));
-  if(entered===null) return;
-  const value=Number.parseInt(entered,10);
-  if(!Number.isInteger(value)||value<1||value>999){
-    $('msg').textContent='반복 횟수는 1~999 사이의 정수로 입력하세요.';
-    return;
-  }
-  repeatSetting=value;
-  $('repeat').textContent=String(value);
-  $('count').textContent='0 / '+value;
-  $('msg').textContent='반복 횟수 '+value+'회 설정';
-};
-
-$('run').onclick=async()=>{
-  if(!connected) return;
-  if(mode==='N'){
-    await send('SET_REPEAT,'+repeatSetting);
-    await new Promise(resolve=>setTimeout(resolve,80));
-    await send('RUN_N');
-  }else if(mode==='SE'){
-    await send('RUN_SE');
-  }else if(mode==='ONE'){
-    await send('RUN_ONE');
-  }else{
-    await send('RUN_CONT');
-  }
-};
-
-document.querySelectorAll('.mode').forEach(button=>button.onclick=()=>{
-  document.querySelectorAll('.mode').forEach(item=>item.classList.remove('active'));
-  button.classList.add('active');
-  mode=button.dataset.mode;
-
-  // Reset the count display for the newly selected mode.
-  if(mode==='SE'){
-    $('repeat').textContent='1';
-    $('count').textContent='0 / 1';
-  }else if(mode==='ONE'){
-    $('repeat').textContent='1';
-    $('count').textContent='0 / 1';
-  }else if(mode==='N'){
-    $('repeat').textContent=String(repeatSetting);
-    $('count').textContent='0 / '+repeatSetting;
-  }else if(mode==='CONT'){
-    $('repeat').textContent='∞';
-    $('count').textContent='0 / ∞';
-  }
-});
-
-$('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.';};
-setInterval(()=>{$('clock').textContent=new Date().toLocaleString('ko-KR',{hour12:false});},1000);
-connection(false);
-sensorUI();
+function startJog(direction){if(!connected)return;if(direction==='FWD'&&s1)return;if(direction==='REV'&&s2)return;$('home').classList.remove('homed','homing');send(direction)}
+function stopJog(){if(connected)send('STOP')}
+function bindJog(id,direction){const button=$(id);button.onpointerdown=event=>{event.preventDefault();button.setPointerCapture(event.pointerId);button.classList.add('pressed');startJog(direction)};const release=event=>{if(event)event.preventDefault();button.classList.remove('pressed');stopJog()};button.onpointerup=release;button.onpointercancel=release}
+bindJog('fwd','FWD');bindJog('rev','REV');
+[document.querySelector('.jog'),document.querySelector('.jogBtns'),$('fwd'),$('rev')].filter(Boolean).forEach(element=>['contextmenu','selectstart','dragstart'].forEach(name=>element.addEventListener(name,event=>{event.preventDefault();event.stopPropagation()},{capture:true})));
+function bindMomentaryCommand(id,command){const button=$(id);button.onpointerdown=event=>{event.preventDefault();button.classList.add('pressed');if(connected)send(command)};const release=event=>{if(event)event.preventDefault();button.classList.remove('pressed')};button.onpointerup=release;button.onpointercancel=release;button.onpointerleave=release}
+bindMomentaryCommand('setStart','SET_START');bindMomentaryCommand('setEnd','SET_END');
+const homeBtn=$('home');homeBtn.onpointerdown=event=>{event.preventDefault();if(!connected)return;homeBtn.classList.remove('homed');homeBtn.classList.add('homing');send('HOME')};homeBtn.oncontextmenu=event=>event.preventDefault();
+const stopBtn=$('stop');stopBtn.onpointerdown=event=>{event.preventDefault();stopBtn.classList.add('pressed');if(connected)send('STOP');pauseUI(false);$('run').classList.remove('running')};const releaseStop=event=>{if(event)event.preventDefault();stopBtn.classList.remove('pressed')};stopBtn.onpointerup=releaseStop;stopBtn.onpointercancel=releaseStop;stopBtn.onpointerleave=releaseStop;stopBtn.oncontextmenu=event=>event.preventDefault();
+$('pause').onclick=async()=>{if(!connected)return;if(!isPaused){await send('PAUSE');pauseUI(true);$('msg').textContent='MOTOR: PAUSED'}else{await send('RESUME');pauseUI(false);$('msg').textContent='MOTOR: RUNNING'}};
+$('repeat').onclick=()=>{const entered=prompt('반복 횟수를 입력하세요 (1~999)',String(repeatSetting));if(entered===null)return;const value=Number.parseInt(entered,10);if(!Number.isInteger(value)||value<1||value>999){$('msg').textContent='반복 횟수는 1~999 사이의 정수로 입력하세요.';return}repeatSetting=value;$('repeat').textContent=String(value);$('count').textContent='0 / '+value;$('msg').textContent='반복 횟수 '+value+'회 설정'};
+$('run').onclick=async()=>{if(!connected)return;pauseUI(false);if(mode==='N'){await send('SET_REPEAT,'+repeatSetting);await new Promise(resolve=>setTimeout(resolve,80));await send('RUN_N')}else if(mode==='SE')await send('RUN_SE');else if(mode==='ONE')await send('RUN_ONE');else await send('RUN_CONT')};
+document.querySelectorAll('.mode').forEach(button=>button.onclick=()=>{document.querySelectorAll('.mode').forEach(item=>item.classList.remove('active'));button.classList.add('active');mode=button.dataset.mode;if(mode==='SE'||mode==='ONE'){$('repeat').textContent='1';$('count').textContent='0 / 1'}else if(mode==='N'){$('repeat').textContent=String(repeatSetting);$('count').textContent='0 / '+repeatSetting}else{$('repeat').textContent='∞';$('count').textContent='0 / ∞'}});
+$('config').onclick=()=>{$('msg').textContent='CONFIG 화면은 다음 단계에서 연결합니다.'};
+setInterval(()=>{$('clock').textContent=new Date().toLocaleString('ko-KR',{hour12:false})},1000);
+connection(false);sensorUI();pauseUI(false);
 </script>
 </body>
 </html>
